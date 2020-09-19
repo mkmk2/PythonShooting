@@ -1,0 +1,2 @@
+# PythonShooting
+PythonとPyxelでシューティングゲームを作る
