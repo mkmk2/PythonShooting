@@ -90,7 +90,7 @@ class Enemy(imp.Sprite):
         elif self.Id0 == imp.EMBOSS:
             self.PosAdjX = -8*3
             self.PosAdjY = -8*2
-            self.Life = 500
+            self.Life = 600
             self.HitPoint = 1
             self.HitRectX = 48
             self.HitRectY = 16
