@@ -15,8 +15,9 @@ class App:
     Score = 0
     # ゲームの状態
     Game_Status = imp.GAME_STATUS_TITLE
-
+    GameOverTime = 0
     Stage_Pos = 0
+
     imp.TilePosX = 0
     imp.TilePosY = -256 * (8 - 1)
 
@@ -25,8 +26,6 @@ class App:
     def __init__(self):
         pyxel.init(imp.WINDOW_W, imp.WINDOW_H, caption="Pyxel Shooting", scale=3, fps=60)
         pyxel.load("assets/my_resource.pyxres")
-
-        imp.Pl.append(player.Player(30, 40, 0, 100))
 
         pyxel.run(self.update, self.draw)
 
@@ -40,61 +39,81 @@ class App:
             if pyxel.btnp(pyxel.KEY_SPACE) or pyxel.btn(pyxel.GAMEPAD_1_A) or pyxel.btn(pyxel.GAMEPAD_1_B):
                 App.Game_Status = imp.GAME_STATUS_MAIN
 
-                # ステージ
-                self.Stage_Pos = 0
+                imp.Pl.append(player.Player(30, 40, 0, 100, 0))
 
-        elif App.Game_Status == imp.GAME_STATUS_MAIN:
-            self.Stage_Pos += 1
+                self.Stage_Pos = 0              # ステージ
+                self.Score = 0                  # スコア
+                self.GameOverTime = 0           # ゲームオーバーの表示時間
+                imp.TilePosX = 0
+                imp.TilePosY = -256 * (8 - 1)
 
-            self.SetStageEnemy()
+        elif App.Game_Status == imp.GAME_STATUS_MAIN or App.Game_Status == imp.GAME_STATUS_GAMEOVER:
+            # ゲームオーバーになったらスクロール止める
+            if App.Game_Status == imp.GAME_STATUS_MAIN:
+                self.Stage_Pos += 1
+            else:
+                self.GameOverTime += 1          # ゲームオーバーの表示時間
+                if self.GameOverTime >= 60 * 5:
+                    App.Game_Status = imp.GAME_STATUS_TITLE    # タイトルに戻る
+                    # 全てのオブジェクトを消す
+                    self.DeathAllObject()
 
-            # プレイヤー
-            for n in imp.Pl:
-                n.PlayerMove()
+            if App.Game_Status != imp.GAME_STATUS_TITLE:
+                self.SetStageEnemy()
 
-            # 敵
-            for n in imp.Em:
-                n.EnemyMove()
+                # プレイヤー
+                for n in imp.Pl:
+                    n.PlayerMove()
 
-            # プレイヤーの弾
-            for n in imp.PlBullet:
-                n.PlayerBulletMove()
+                # 敵
+                for n in imp.Em:
+                    n.EnemyMove()
 
-            # 敵の弾
-            for n in imp.EmBullet:
-                n.EnemyBulletMove()
+                # プレイヤーの弾
+                for n in imp.PlBullet:
+                    n.PlayerBulletMove()
 
-            # エフェクト
-            for n in imp.Eff:
-                n.EffectMove()
+                # 敵の弾
+                for n in imp.EmBullet:
+                    n.EnemyBulletMove()
 
-            # アイテム
-            for n in imp.Itm:
-                n.PlItemMove()
+                # エフェクト
+                for n in imp.Eff:
+                    n.EffectMove()
 
-            # 当たり判定 ---------------------------------
-            # プレイヤーの弾と敵
-            for plat in imp.PlBullet:
-                for embd in imp.Em:
-                    self.CheckColli(plat, embd)
+                # アイテム
+                for n in imp.Itm:
+                    n.PlItemMove()
 
-            # 敵の弾とプレイヤー
-            for emb in imp.EmBullet:
+                # 当たり判定 ---------------------------------
+                # プレイヤーの弾と敵
+                for plat in imp.PlBullet:
+                    for embd in imp.Em:
+                        self.CheckColli(plat, embd)
+
+                # 敵の弾とプレイヤー
+                for emb in imp.EmBullet:
+                    for p in imp.Pl:
+                        self.CheckColli(emb, p)
+
+                # プレイヤーがアイテムをとる
                 for p in imp.Pl:
-                    self.CheckColli(emb, p)
+                    for i in imp.Itm:
+                        self.CheckColliPlItm(p, i)
 
-            # プレイヤーがアイテムをとる
-            for p in imp.Pl:
-                for i in imp.Itm:
-                    self.CheckColliPlItm(p, i)
+                for p in imp.Pl:
+                    if App.Game_Status != imp.GAME_STATUS_GAMEOVER:       # ゲームオーバーでないとき
+                        if p.Death == 1:
+                            App.Game_Status = imp.GAME_STATUS_GAMEOVER       # ゲームオーバー
 
-            for p in imp.Pl:
-                if p.Death == 1:
-                    App.Game_Status = imp.GAME_STATUS_GAMEOVER       # ゲームオーバー
-
-                    imp.Eff.append(effect.Effect(128 - (8 * 4) - 4, 100, 4, 0))       # GameOver
+                            imp.Eff.append(effect.Effect(128 - (8 * 4) - 4, 100, 4, 0, 0))       # GameOver
 
             # オブジェクトを消す ---------------------------------
+            # プレイヤーを消す
+            for n,p in enumerate(imp.Pl):
+                if p.Death != 0:
+                    del imp.Pl[n]     # リストから削除する
+
             # プレイヤーの弾を消す
             for n,p in enumerate(imp.PlBullet):
                 if p.Death != 0:
@@ -128,8 +147,6 @@ class App:
 #                if n.Death != 0:
 #                    del App.EmBullet[no - 1]        # リストから削除する
 
-        elif App.Game_Status == imp.GAME_STATUS_GAMEOVER:
-            pass
 
     # 画面描画
     def draw(self):
@@ -187,7 +204,7 @@ class App:
         # ステージの位置から敵をセットする
         for n,e in enumerate(imp.STAGE_EM_POS):
             if self.Stage_Pos == e[0]:
-                imp.Em.append(enemy.Enemy(e[1], e[2], e[3], e[4]))
+                imp.Em.append(enemy.Enemy(e[1], e[2], e[3], e[4], e[5]))
 
     #  ------------------------------------------
     def CheckColli(self, plat, embd):
@@ -200,7 +217,7 @@ class App:
         if xx < rx and yy < ry:
             plat.Death = 1          # 攻撃側は消える
             # エフェクト
-            imp.Eff.append(effect.Effect(plat.PosX, plat.PosY, 0, 0))
+            imp.Eff.append(effect.Effect(plat.PosX, plat.PosY, 0, 0, 0))
 
             embd.Life -= plat.HitPoint      # ダメージ計算
             if embd.Life <= 0:              # 0以下なら死ぬ
@@ -229,5 +246,25 @@ class App:
         return False                    # 外れ
 
     #  ------------------------------------------
+    def DeathAllObject(self):
+        # プレイヤーの弾を消す
+        for p in imp.PlBullet:
+            p.Death = 1
+
+        # 敵を消す
+        for e in imp.Em:
+            e.Death = 1
+
+        # 敵の弾を消す
+        for e in imp.EmBullet:
+            e.Death = 1
+
+        # エフェクトを消す
+        for e in imp.Eff:
+            e.Death = 1
+
+        # アイテムを消す
+        for e in imp.Itm:
+            e.Death = 1
 
 App()

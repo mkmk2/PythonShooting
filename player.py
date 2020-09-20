@@ -17,8 +17,8 @@ class Player(imp.Sprite):
     Level = 0
 
     # コンストラクタ
-    def __init__(self, x, y, id0, id1):
-        imp.Sprite.__init__(self, x, y, id0, id1)       # Spriteクラスのコンストラクタ
+    def __init__(self, x, y, id0, id1, item):
+        imp.Sprite.__init__(self, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
 
         self.PlDir = 0              # 上下のパターン切り替え
         self.PlSt0 = 0              # st0
@@ -35,16 +35,17 @@ class Player(imp.Sprite):
     # メイン
     def PlayerMove(self):
 
-        if self.PlSt0 == 0:
+        if self.PlSt0 == 0:             # デモ
             self.PosY -= 2
             if self.PosY < 200:
                 self.PlSt0 = 1
 
-        elif self.PlSt0 == 1:
+        elif self.PlSt0 == 1:           # ゲームプレイ中
 
             if self.Life <= 0:          # 0以下なら死ぬ
-                self.Death = 1          # 死ぬ
-                print("pl die")
+                self.PlSt0 = 2          # 死に
+                self.MvWait = 10        # 爆発数
+                self.MvTime = 0         # 爆発タイマー
 
             self.PlDir = 0                       # 前
 
@@ -83,14 +84,14 @@ class Player(imp.Sprite):
                 if self.ShotTime < 0:
                     self.ShotTime = 5
                     if self.Level == 0:
-                        imp.PlBullet.append(PlayerBullet(self.PosX, self.PosY, 0, 0))
+                        imp.PlBullet.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
                     elif self.Level == 1:
-                        imp.PlBullet.append(PlayerBullet(self.PosX - 5, self.PosY, 0, 0))
-                        imp.PlBullet.append(PlayerBullet(self.PosX + 5, self.PosY, 0, 0))
+                        imp.PlBullet.append(PlayerBullet(self.PosX - 5, self.PosY, 0, 0, 0))
+                        imp.PlBullet.append(PlayerBullet(self.PosX + 5, self.PosY, 0, 0, 0))
                     else:
-                        imp.PlBullet.append(PlayerBullet(self.PosX - 6, self.PosY, 1, 0))  # 左側
-                        imp.PlBullet.append(PlayerBullet(self.PosX, self.PosY, 0, 0))
-                        imp.PlBullet.append(PlayerBullet(self.PosX + 6, self.PosY, 2, 0))  # 右側
+                        imp.PlBullet.append(PlayerBullet(self.PosX - 6, self.PosY, 1, 0, 0))  # 左側
+                        imp.PlBullet.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
+                        imp.PlBullet.append(PlayerBullet(self.PosX + 6, self.PosY, 2, 0, 0))  # 右側
 
             else:
                 self.ShotTime = 0
@@ -98,6 +99,20 @@ class Player(imp.Sprite):
             if self.ItemNum >= 5:
                 self.ItemNum = 0
                 self.Level += 1
+
+        elif self.PlSt0 == 2:           # 死に
+            # 爆発
+            self.MvTime -= 1
+            if self.MvTime <= 0:
+                imp.Eff.append(effect.Effect(self.PosX - 10 + random.randrange(0, 20, 1), self.PosY - 10 + random.randrange(0, 20, 1), 0, 0, 0))
+                imp.Eff.append(effect.Effect(self.PosX - 10 + random.randrange(0, 20, 1), self.PosY - 10 + random.randrange(0, 20, 1), 0, 0, 0))
+                self.MvTime = 4
+                self.Display = self.MvWait & 1      # 点滅
+                self.MvWait -= 1
+                if self.MvWait <= 0:
+                    self.Death = 1          # 死ぬ
+                    print("pl die")
+
 
     # 描画
     def Draw(self):
@@ -119,8 +134,8 @@ class Player(imp.Sprite):
 class PlayerBullet(imp.Sprite):
 
     # コンストラクタ
-    def __init__(self, x, y, id0, id1):
-        imp.Sprite.__init__(self, x, y, id0, id1)       # Spriteクラスのコンストラクタ
+    def __init__(self, x, y, id0, id1, item):
+        imp.Sprite.__init__(self, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
 
         self.PosAdjX = -1
         self.PosAdjY = -2
