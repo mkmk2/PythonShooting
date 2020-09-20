@@ -12,8 +12,8 @@ import shooting_sub
 class Effect(imp.Sprite):
 
     # コンストラクタ
-    def __init__(self, x, y, id0, id1):
-        imp.Sprite.__init__(self, x, y, id0, id1)       # Spriteクラスのコンストラクタ
+    def __init__(self, x, y, id0, id1, item):
+        imp.Sprite.__init__(self, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
 
         self.PosAdjX = -8
         self.PosAdjY = -4
