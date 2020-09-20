@@ -51,8 +51,8 @@ class Enemy(imp.Sprite):
     BossMoveTblPtr = 0
 
     # コンストラクタ
-    def __init__(self, x, y, id0, id1):
-        imp.Sprite.__init__(self, x, y, id0, id1)       # Spriteクラスのコンストラクタ
+    def __init__(self, x, y, id0, id1, item):
+        imp.Sprite.__init__(self, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
 
         if self.Id0 == imp.EM0:
             self.PosAdjX = -8
@@ -105,7 +105,7 @@ class Enemy(imp.Sprite):
                 if self.St0 == 0:
                     self.PosY += 1.5
                     if self.PosY > 130:
-                        imp.EmBullet.append(EnemyBullet(self.PosX,self.PosY,0,0))
+                        imp.EmBullet.append(EnemyBullet(self.PosX,self.PosY,0,0,0))
                         self.St0 = 1
                 else:
                     self.PosY -= 1.5
@@ -123,9 +123,9 @@ class Enemy(imp.Sprite):
                     if self.MvWait < 0:
                         self.MvWait = 30
 
-                        imp.EmBullet.append(EnemyBullet(self.PosX,self.PosY,1,7))
-                        imp.EmBullet.append(EnemyBullet(self.PosX,self.PosY,1,8))
-                        imp.EmBullet.append(EnemyBullet(self.PosX,self.PosY,1,9))
+                        imp.EmBullet.append(EnemyBullet(self.PosX,self.PosY,1,7,0))
+                        imp.EmBullet.append(EnemyBullet(self.PosX,self.PosY,1,8,0))
+                        imp.EmBullet.append(EnemyBullet(self.PosX,self.PosY,1,9,0))
 
                         self.BulletTime += 1
                         if self.BulletTime >= 10:
@@ -150,7 +150,7 @@ class Enemy(imp.Sprite):
                     if self.MvWait < 0:
                         self.MvWait = 60
                         for n in range(32):
-                            imp.EmBullet.append(EnemyBullet(self.PosX,self.PosY,1,n))
+                            imp.EmBullet.append(EnemyBullet(self.PosX,self.PosY,1,n,0))
 
                         self.BulletTime += 1
                         if self.BulletTime >= 8:
@@ -198,9 +198,9 @@ class Enemy(imp.Sprite):
                 if self.BulletTime < 0:
                     self.BulletTime = 15
                     if (self.St1 & 1) == 0:
-                        imp.EmBullet.append(EnemyBullet(self.PosX - 8,self.PosY,3,0))
+                        imp.EmBullet.append(EnemyBullet(self.PosX - 8,self.PosY,3,0,0))
                     else:
-                        imp.EmBullet.append(EnemyBullet(self.PosX + 8,self.PosY,3,0))
+                        imp.EmBullet.append(EnemyBullet(self.PosX + 8,self.PosY,3,0,0))
 
                     self.St1 -= 1
                     if self.St1 <= 0:
@@ -243,9 +243,9 @@ class Enemy(imp.Sprite):
                     if self.BulletTime < 0:
                         self.BulletTime = 15
                         if (self.MvWait & 1) == 0:
-                            imp.EmBullet.append(EnemyBullet(self.PosX - 8,self.PosY,3,0))
+                            imp.EmBullet.append(EnemyBullet(self.PosX - 8,self.PosY,3,0,0))
                         else:
-                            imp.EmBullet.append(EnemyBullet(self.PosX + 8,self.PosY,3,0))
+                            imp.EmBullet.append(EnemyBullet(self.PosX + 8,self.PosY,3,0,0))
 
                         self.MvWait -= 1
                         if self.MvWait <= 0:
@@ -255,7 +255,7 @@ class Enemy(imp.Sprite):
                     if  self.St2 == 0:
                         # 全方向弾撃つ
                         for n in range(32):
-                            imp.EmBullet.append(EnemyBullet(self.PosX,self.PosY,1,n))
+                            imp.EmBullet.append(EnemyBullet(self.PosX,self.PosY,1,n,0))
                         self.St2 = 1
                     else:
                         # 待機
@@ -276,9 +276,9 @@ class Enemy(imp.Sprite):
                 # 爆発
                 self.MvTime -= 1
                 if self.MvTime <= 0:
-                    imp.Eff.append(effect.Effect(self.PosX - 25 + random.randrange(0, 50, 1), self.PosY - 10 + random.randrange(0, 20, 1), 0, 0))
-                    imp.Eff.append(effect.Effect(self.PosX - 25 + random.randrange(0, 50, 1), self.PosY - 10 + random.randrange(0, 20, 1), 0, 0))
-                    imp.Eff.append(effect.Effect(self.PosX - 25 + random.randrange(0, 50, 1), self.PosY - 10 + random.randrange(0, 20, 1), 1, random.randrange(0, 31, 1)))
+                    imp.Eff.append(effect.Effect(self.PosX - 25 + random.randrange(0, 50, 1), self.PosY - 10 + random.randrange(0, 20, 1), 0, 0, 0))
+                    imp.Eff.append(effect.Effect(self.PosX - 25 + random.randrange(0, 50, 1), self.PosY - 10 + random.randrange(0, 20, 1), 0, 0, 0))
+                    imp.Eff.append(effect.Effect(self.PosX - 25 + random.randrange(0, 50, 1), self.PosY - 10 + random.randrange(0, 20, 1), 1, random.randrange(0, 31, 1), 0))
                     self.MvTime = 6
                     self.Display = self.MvWait & 1      # 点滅
                     self.MvWait -= 1
@@ -297,7 +297,10 @@ class Enemy(imp.Sprite):
             if self.Life <= 0:          # 0以下なら死ぬ
                 self.Death = 1          # 死ぬ
                 print("enemy die")
-                imp.Itm.append(plitem.PlItem(self.PosX,self.PosY,0,0))
+                # アイテムセット
+                if self.ItemSet != 0:
+                    print("item")
+                    imp.Itm.append(plitem.PlItem(self.PosX,self.PosY,0,0,0))
 
         # 画面内チェック
         self.ScreenTime += 1
@@ -367,8 +370,8 @@ class EnemyBullet(imp.Sprite):
     st = 0
 
     # コンストラクタ
-    def __init__(self, x, y, id0, id1):
-        imp.Sprite.__init__(self, x, y, id0, id1)       # Spriteクラスのコンストラクタ
+    def __init__(self, x, y, id0, id1, item):
+        imp.Sprite.__init__(self, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
 
         self.Life = 1
         self.HitPoint = 1
