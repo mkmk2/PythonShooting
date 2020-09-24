@@ -155,8 +155,10 @@ class App:
 
         # タイル描画
         if App.Game_Status == imp.GAME_STATUS_TITLE:
+            # タイトル画面
             pyxel.bltm(0, 0, 0, 8 * 9, 0, 32, 30)
         else:
+            # ゲーム画面
             pyxel.bltm(imp.TilePosX - 64, imp.TilePosY, 0, 32-8, 0, 32+16, 1024)
             imp.TilePosY += 0.1
             if imp.TilePosY > 0:

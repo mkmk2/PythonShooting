@@ -46,20 +46,21 @@ class Effect(imp.Sprite):
             if self.PtnNo == 0:
                 x = self.PosX - 4
                 y = self.PosY - 4
-                pyxel.blt(x, y, 0, 0, 16, 8, 8, 0)
+                pyxel.blt(x, y, 0, 0, 8*20, 8, 8, 0)
             elif self.PtnNo == 1:
                 x = self.PosX - 4
                 y = self.PosY - 4
-                pyxel.blt(x, y, 0, 8, 16, 8, 8, 0)
+                pyxel.blt(x, y, 0, 8, 8*20, 8, 8, 0)
             elif self.PtnNo == 2:
                 x = self.PosX - 4
                 y = self.PosY - 4
-                pyxel.blt(x, y, 0, 16, 16, 12, 12, 0)
+                pyxel.blt(x, y, 0, 16, 8*20, 12, 12, 0)
             elif self.PtnNo == 3:
                 x = self.PosX - 4
                 y = self.PosY - 4
-                pyxel.blt(x, y, 0, 32, 16, 12, 12, 0)
+                pyxel.blt(x, y, 0, 32, 8*20, 12, 12, 0)
         else:
+            # GAME OVER
             pyxel.blt(self.PosX,      self.PosY, 0, 0,    8*18, 8*4, 16, 0)
             pyxel.blt(self.PosX + 40, self.PosY, 0, 8*4,  8*18, 8*4, 16, 0)
 
