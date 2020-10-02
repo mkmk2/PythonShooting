@@ -5,6 +5,7 @@ import imp
 import random
 import shooting_sub
 import effect
+#from playsound import playsound
 
 PL_SPEED = 1.2
 
@@ -92,6 +93,9 @@ class Player(imp.Sprite):
                         imp.PlBullet.append(PlayerBullet(self.PosX - 6, self.PosY, 1, 0, 0))  # 左側
                         imp.PlBullet.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
                         imp.PlBullet.append(PlayerBullet(self.PosX + 6, self.PosY, 2, 0, 0))  # 右側
+
+#                    playsound("shoot1.mp3")
+                    
 
             else:
                 self.ShotTime = 0
