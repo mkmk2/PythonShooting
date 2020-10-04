@@ -14,7 +14,7 @@ class App:
     # スコア
     Score = 0
     # ゲームの状態
-    Game_Status = imp.GAME_STATUS_TITLE
+    imp.Game_Status = imp.GAME_STATUS_TITLE
     GameOverTime = 0
     Stage_Pos = 0
 
@@ -35,9 +35,10 @@ class App:
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
 
-        if App.Game_Status == imp.GAME_STATUS_TITLE:
+        if imp.Game_Status == imp.GAME_STATUS_TITLE:
+            # タイトル画面
             if pyxel.btnp(pyxel.KEY_SPACE) or pyxel.btn(pyxel.GAMEPAD_1_A) or pyxel.btn(pyxel.GAMEPAD_1_B):
-                App.Game_Status = imp.GAME_STATUS_MAIN
+                imp.Game_Status = imp.GAME_STATUS_MAIN
 
                 imp.Pl.append(player.Player(30, 40, 0, 100, 0))
 
@@ -47,18 +48,18 @@ class App:
                 imp.TilePosX = 0
                 imp.TilePosY = -256 * (8 - 1)
 
-        elif App.Game_Status == imp.GAME_STATUS_MAIN or App.Game_Status == imp.GAME_STATUS_GAMEOVER:
-            # ゲームオーバーになったらスクロール止める
-            if App.Game_Status == imp.GAME_STATUS_MAIN:
+        elif imp.Game_Status == imp.GAME_STATUS_MAIN or imp.Game_Status == imp.GAME_STATUS_GAMEOVER or imp.Game_Status == imp.GAME_STATUS_STAGECLEAR:
+            # ゲームオーバーになったらスクロール(敵セット)止める
+            if imp.Game_Status == imp.GAME_STATUS_MAIN:
                 self.Stage_Pos += 1
             else:
                 self.GameOverTime += 1          # ゲームオーバーの表示時間
                 if self.GameOverTime >= 60 * 5:
-                    App.Game_Status = imp.GAME_STATUS_TITLE    # タイトルに戻る
+                    imp.Game_Status = imp.GAME_STATUS_TITLE    # タイトルに戻る
                     # 全てのオブジェクトを消す
                     self.DeathAllObject()
 
-            if App.Game_Status != imp.GAME_STATUS_TITLE:
+            if imp.Game_Status != imp.GAME_STATUS_TITLE:
                 self.SetStageEnemy()
 
                 # プレイヤー
@@ -101,12 +102,22 @@ class App:
                     for i in imp.Itm:
                         self.CheckColliPlItm(p, i)
 
-                for p in imp.Pl:
-                    if App.Game_Status != imp.GAME_STATUS_GAMEOVER:       # ゲームオーバーでないとき
+                # プレイヤーが死んだらゲームオーバーへ
+                if imp.Game_Status != imp.GAME_STATUS_GAMEOVER:       # ゲームオーバーでないとき
+                    for p in imp.Pl:
                         if p.Death == 1:
-                            App.Game_Status = imp.GAME_STATUS_GAMEOVER       # ゲームオーバー
+                            imp.Game_Status = imp.GAME_STATUS_GAMEOVER       # ゲームオーバー
 
                             imp.Eff.append(effect.Effect(128 - (8 * 4) - 4, 100, 4, 0, 0))       # GameOver
+
+                # ボスが死んだらステージクリアへ
+                if imp.Game_Status == imp.GAME_STATUS_MAIN:       # ゲーム中のみ
+                    for e in imp.Em:
+                        if e.Id0 == imp.EMBOSS:
+                            if e.Death == 1:
+                                imp.Game_Status = imp.GAME_STATUS_STAGECLEAR       # ステージクリア
+
+                                imp.Eff.append(effect.Effect(128 - (8 * 4) - 4, 100, 5, 0, 0))       # StageClear
 
             # オブジェクトを消す ---------------------------------
             # プレイヤーを消す
@@ -154,18 +165,19 @@ class App:
         pyxel.cls(13)
 
         # タイル描画
-        if App.Game_Status == imp.GAME_STATUS_TITLE:
+        if imp.Game_Status == imp.GAME_STATUS_TITLE:
             # タイトル画面
             pyxel.bltm(0, 0, 0, 8 * 9, 0, 32, 30)
         else:
             # ゲーム画面
             pyxel.bltm(imp.TilePosX - 64, imp.TilePosY, 0, 32-8, 0, 32+16, 1024)
-            imp.TilePosY += 0.1
-            if imp.TilePosY > 0:
-                imp.TilePosY = 0
+            if imp.Game_Status == imp.GAME_STATUS_MAIN or imp.Game_Status == imp.GAME_STATUS_STAGECLEAR:
+                imp.TilePosY += 0.1
+                if imp.TilePosY > 0:
+                    imp.TilePosY = 0
 
 
-        if App.Game_Status == imp.GAME_STATUS_MAIN or App.Game_Status == imp.GAME_STATUS_GAMEOVER:
+        if imp.Game_Status == imp.GAME_STATUS_MAIN or imp.Game_Status == imp.GAME_STATUS_GAMEOVER or imp.Game_Status == imp.GAME_STATUS_STAGECLEAR:
             # プレイヤー
             for n in imp.Pl:
                 n.Draw()
@@ -249,6 +261,10 @@ class App:
 
     #  ------------------------------------------
     def DeathAllObject(self):
+        # プレイヤーを消す
+        for p in imp.Pl:
+            p.Death = 1
+
         # プレイヤーの弾を消す
         for p in imp.PlBullet:
             p.Death = 1

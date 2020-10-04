@@ -43,11 +43,13 @@ class Player(imp.Sprite):
 
         elif self.PlSt0 == 1:           # ゲームプレイ中
 
-            if self.Life <= 0:          # 0以下なら死ぬ
-                self.PlSt0 = 2          # 死に
-                self.MvWait = 10        # 爆発数
-                self.MvTime = 0         # 爆発タイマー
+            if imp.Game_Status == imp.GAME_STATUS_MAIN:     # ゲーム中のみ死にチェック
+                if self.Life <= 0:          # 0以下なら死ぬ
+                    self.PlSt0 = 2          # 死に
+                    self.MvWait = 10        # 爆発数
+                    self.MvTime = 0         # 爆発タイマー
 
+            # プレイヤー移動
             self.PlDir = 0                       # 前
 
             # 上移動(上カーソルキー)

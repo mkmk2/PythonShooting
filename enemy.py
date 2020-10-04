@@ -90,7 +90,8 @@ class Enemy(imp.Sprite):
         elif self.Id0 == imp.EMBOSS:
             self.PosAdjX = -8*3
             self.PosAdjY = -8*2
-            self.Life = 600
+#            self.Life = 600
+            self.Life = 50
             self.HitPoint = 1
             self.HitRectX = 48
             self.HitRectY = 16
@@ -165,12 +166,13 @@ class Enemy(imp.Sprite):
                 self.PosY += 1.2
                 if self.PosY > 40:
                     pl = imp.GetPl(self)
-                    if self.PosX < pl.PosX:
-                        self.VectorX += 0.015
-                        self.St1 = 1    # 右回転
-                    else:
-                        self.VectorX -= 0.015
-                        self.St1 = 2    # 左回転
+                    if pl != 0:
+                        if self.PosX < pl.PosX:
+                            self.VectorX += 0.015
+                            self.St1 = 1    # 右回転
+                        else:
+                            self.VectorX -= 0.015
+                            self.St1 = 2    # 左回転
 
             self.PosX += self.VectorX
 
@@ -284,6 +286,7 @@ class Enemy(imp.Sprite):
                     self.MvWait -= 1
                     if self.MvWait <= 0:
                         self.Death = 1          # 死ぬ
+#                        imp.Game_Status = imp.GAME_STATUS_STAGECLEAR       # ステージクリアー
 
             # Boss死にチェック
             if self.Life <= 0 and self.St0 != EMBOSS_BOMB:          # 0以下なら死ぬ

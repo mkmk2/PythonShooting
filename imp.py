@@ -14,6 +14,7 @@ BLOCK_DOWN_WAIT = 6
 GAME_STATUS_TITLE = 0
 GAME_STATUS_MAIN = 1
 GAME_STATUS_GAMEOVER = 2
+GAME_STATUS_STAGECLEAR = 3
 
 POS_FIELD_X = 10
 POS_FIELD_Y = 4
@@ -28,7 +29,7 @@ EMBOSS = 10
 # 敵のセット位置
 STAGE_EM_POS = [            # 時間, X, Y, id0, id1, item
 
-#    [ 100, 128,   0, EMBOSS,  0, 0,],   # Boss
+    [ 100, 128,   0, EMBOSS,  0, 0,],   # Boss
 
     [ 200,  128-60,   0,  EM2,  0, 0,],    # まっすぐ
     [ 240,  128-60,   0,  EM2,  0, 0,],
@@ -108,6 +109,8 @@ Itm = []
 TilePosX = 0
 TilePosY = 0
 
+Game_Status = GAME_STATUS_TITLE
+
 # --------------------------------------------------
 # スプライト表示の共通クラス
 class Sprite:
@@ -155,4 +158,8 @@ def CheckScreenIn(self):
 
 #  ------------------------------------------
 def GetPl(self):
-    return Pl[0]
+    if len(Pl) > 0:
+        return Pl[0]
+    
+    return 0
+    
