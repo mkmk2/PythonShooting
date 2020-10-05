@@ -395,6 +395,8 @@ class EnemyBullet(imp.Sprite):
             self.PosAdjY = -8
             self.VectorX = 0
             self.VectorY = 1.8
+            self.HitRectX = 4
+            self.HitRectY = 4
 
     # メイン
     def EnemyBulletMove(self):

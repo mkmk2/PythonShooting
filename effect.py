@@ -65,8 +65,7 @@ class Effect(imp.Sprite):
             pyxel.blt(self.PosX + 40, self.PosY, 0, 8*4,  8*18, 8*4, 16, 0)
         elif self.Id0 == 5:           # STAGE CLEAR
             # STAGE CLEAR
-            pyxel.blt(self.PosX,      self.PosY, 0, 8*8,  8*18, 8*4, 16, 0)
-            pyxel.blt(self.PosX + 40, self.PosY, 0, 8*12, 8*18, 8*4, 16, 0)
+            pyxel.blt(self.PosX - (8 * 4),      self.PosY, 0, 8*8,  8*18, 8*8, 16, 0)
 
 # --------------------------------------------------
 

@@ -117,7 +117,7 @@ class App:
                             if e.Death == 1:
                                 imp.Game_Status = imp.GAME_STATUS_STAGECLEAR       # ステージクリア
 
-                                imp.Eff.append(effect.Effect(128 - (8 * 4) - 4, 100, 5, 0, 0))       # StageClear
+                                imp.Eff.append(effect.Effect(128, 100, 5, 0, 0))       # StageClear
 
             # オブジェクトを消す ---------------------------------
             # プレイヤーを消す
@@ -213,6 +213,13 @@ class App:
                         pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
                     else:
                         pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
+            # Lifeゲージ
+            for p in imp.Pl:
+                for n in range(5):
+                    if n >= p.Life:
+                        pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
+                    else:
+                        pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
     #  ------------------------------------------
     def SetStageEnemy(self):
         # ステージの位置から敵をセットする
