@@ -190,7 +190,7 @@ class Enemy(imp.Sprite):
             if self.St0 == EMBOSS_ENTER:
                 self.PosY += 1.5
                 if self.PosY > 60:
-                    self.St0 = 1
+                    self.St0 = EMBOSS_AT_BO
 
                     self.BulletTime = 0
                     self.St1 = 5
@@ -206,7 +206,7 @@ class Enemy(imp.Sprite):
 
                     self.St1 -= 1
                     if self.St1 <= 0:
-                        self.St0 = 2
+                        self.St0 = EMBOSS_MOVE
                         self.St1 = 0
 
                         self.BossMoveTbl = 0
@@ -268,11 +268,12 @@ class Enemy(imp.Sprite):
                             if BOSS_MOVE_TBL[self.BossMoveTblPtr][2] != -1:
                                 self.St1 = 0        # 次のTbl
                             else:
-                                self.St0 = 3        # 終わり
+                                self.St0 = EMBOSS_RETURN        # 終わり
 
             elif self.St0 == EMBOSS_RETURN:
                 # 帰る
-                self.PosY -= 0.5
+                self.Life = 0       # 自爆する
+#                self.PosY -= 0.5
 
             elif self.St0 == EMBOSS_BOMB:
                 # 爆発
@@ -294,11 +295,13 @@ class Enemy(imp.Sprite):
                 print("boss die")
                 self.MvWait = 30       # 爆発数
                 self.MvTime = 0         # 爆発タイマー
+                imp.Score += self.Score     # Scoreを加算(自爆は加算しない)
 
         # 死にチェック
         if self.Id0 != imp.EMBOSS:     # Boss以外は共通の死にチェック、Bossは自分でチェックして爆発とかする
             if self.Life <= 0:          # 0以下なら死ぬ
                 self.Death = 1          # 死ぬ
+                imp.Score += self.Score     # Scoreを加算
                 print("enemy die")
                 # アイテムセット
                 if self.ItemSet != 0:

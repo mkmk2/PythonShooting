@@ -11,8 +11,6 @@ import plitem
 # ==================================================
 class App:
 
-    # スコア
-    Score = 0
     # ゲームの状態
     imp.Game_Status = imp.GAME_STATUS_TITLE
     GameOverTime = 0
@@ -43,7 +41,7 @@ class App:
                 imp.Pl.append(player.Player(30, 40, 0, 100, 0))
 
                 self.Stage_Pos = 0              # ステージ
-                self.Score = 0                  # スコア
+                imp.Score = 0                  # スコア
                 self.GameOverTime = 0           # ゲームオーバーの表示時間
                 imp.TilePosX = 0
                 imp.TilePosY = -256 * (8 - 1)
@@ -203,23 +201,23 @@ class App:
                 n.Draw()
 
             # スコアの表示
-            sc = "{:04}".format(self.Score)
+            sc = "{:04}".format(imp.Score)
             pyxel.text(100, 10, sc, 7)
 
             # Itemゲージ
             for p in imp.Pl:
                 for n in range(5):
                     if n >= p.ItemNum:
-                        pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
+                        pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
                     else:
-                        pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
+                        pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
             # Lifeゲージ
             for p in imp.Pl:
                 for n in range(5):
                     if n >= p.Life:
-                        pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
+                        pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
                     else:
-                        pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
+                        pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
     #  ------------------------------------------
     def SetStageEnemy(self):
         # ステージの位置から敵をセットする
@@ -243,7 +241,6 @@ class App:
             embd.Life -= plat.HitPoint      # ダメージ計算
             if embd.Life <= 0:              # 0以下なら死ぬ
                 embd.Life = 0
-                App.Score += embd.Score     # Scoreを加算
                 print("hit")
                 return True                 # 当たり
 

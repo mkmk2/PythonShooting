@@ -111,6 +111,10 @@ TilePosY = 0
 
 Game_Status = GAME_STATUS_TITLE
 
+# スコア
+Score = 0
+
+
 # --------------------------------------------------
 # スプライト表示の共通クラス
 class Sprite:

@@ -49,62 +49,67 @@ class Player(imp.Sprite):
                     self.MvWait = 10        # 爆発数
                     self.MvTime = 0         # 爆発タイマー
 
-            # プレイヤー移動
-            self.PlDir = 0                       # 前
-
-            # 上移動(上カーソルキー)
-            if pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.GAMEPAD_1_UP):
-                self.PosY -= PL_SPEED
-                if self.PosY < 50:
-                    self.PosY = 50
-
-            # 下移動(下カーソルキー)
-            if pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.GAMEPAD_1_DOWN):
-                self.PosY += PL_SPEED
-                if self.PosY > imp.WINDOW_H - 16:
-                    self.PosY = imp.WINDOW_H - 16
-
-            # 右移動(右カーソルキー)
-            if pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.GAMEPAD_1_RIGHT):
-                self.PosX += PL_SPEED
-                self.PlDir = 2                   # 右
-                if self.PosX > imp.WINDOW_W - 8:
-                    self.PosX = imp.WINDOW_W - 8
-
-            # 左移動(左カーソルキー)
-            if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.GAMEPAD_1_LEFT):
-                self.PosX -= PL_SPEED
-                self.PlDir = 1                   # 左
-                if self.PosX < 8:
-                    self.PosX = 8
-
-            scX = self.PosX - 128
-            imp.TilePosX = -scX / 10
-
-            # 弾セット(スペースキー)
-            if pyxel.btn(pyxel.KEY_SPACE) or pyxel.btn(pyxel.GAMEPAD_1_A) or pyxel.btn(pyxel.GAMEPAD_1_B):
-                self.ShotTime -= 1
-                if self.ShotTime < 0:
-                    self.ShotTime = 5
-                    if self.Level == 0:
-                        imp.PlBullet.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
-                    elif self.Level == 1:
-                        imp.PlBullet.append(PlayerBullet(self.PosX - 5, self.PosY, 0, 0, 0))
-                        imp.PlBullet.append(PlayerBullet(self.PosX + 5, self.PosY, 0, 0, 0))
-                    else:
-                        imp.PlBullet.append(PlayerBullet(self.PosX - 6, self.PosY, 1, 0, 0))  # 左側
-                        imp.PlBullet.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
-                        imp.PlBullet.append(PlayerBullet(self.PosX + 6, self.PosY, 2, 0, 0))  # 右側
-
-#                    playsound("shoot1.mp3")
-                    
+            if imp.Game_Status == imp.GAME_STATUS_STAGECLEAR:    # ステージクリア
+                self.PlSt0 = 3          # クリア
+                self.PlDir = 0                       # 前
 
             else:
-                self.ShotTime = 0
+                # プレイヤー移動
+                self.PlDir = 0                       # 前
 
-            if self.ItemNum >= 5:
-                self.ItemNum = 0
-                self.Level += 1
+                # 上移動(上カーソルキー)
+                if pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.GAMEPAD_1_UP):
+                    self.PosY -= PL_SPEED
+                    if self.PosY < 50:
+                        self.PosY = 50
+
+                # 下移動(下カーソルキー)
+                if pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.GAMEPAD_1_DOWN):
+                    self.PosY += PL_SPEED
+                    if self.PosY > imp.WINDOW_H - 16:
+                        self.PosY = imp.WINDOW_H - 16
+
+                # 右移動(右カーソルキー)
+                if pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.GAMEPAD_1_RIGHT):
+                    self.PosX += PL_SPEED
+                    self.PlDir = 2                   # 右
+                    if self.PosX > imp.WINDOW_W - 8:
+                        self.PosX = imp.WINDOW_W - 8
+
+                # 左移動(左カーソルキー)
+                if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.GAMEPAD_1_LEFT):
+                    self.PosX -= PL_SPEED
+                    self.PlDir = 1                   # 左
+                    if self.PosX < 8:
+                        self.PosX = 8
+
+                scX = self.PosX - 128
+                imp.TilePosX = -scX / 10
+
+                # 弾セット(スペースキー)
+                if pyxel.btn(pyxel.KEY_SPACE) or pyxel.btn(pyxel.GAMEPAD_1_A) or pyxel.btn(pyxel.GAMEPAD_1_B):
+                    self.ShotTime -= 1
+                    if self.ShotTime < 0:
+                        self.ShotTime = 5
+                        if self.Level == 0:
+                            imp.PlBullet.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
+                        elif self.Level == 1:
+                            imp.PlBullet.append(PlayerBullet(self.PosX - 5, self.PosY, 0, 0, 0))
+                            imp.PlBullet.append(PlayerBullet(self.PosX + 5, self.PosY, 0, 0, 0))
+                        else:
+                            imp.PlBullet.append(PlayerBullet(self.PosX - 6, self.PosY, 1, 0, 0))  # 左側
+                            imp.PlBullet.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
+                            imp.PlBullet.append(PlayerBullet(self.PosX + 6, self.PosY, 2, 0, 0))  # 右側
+
+    #                    playsound("shoot1.mp3")
+                        
+
+                else:
+                    self.ShotTime = 0
+
+                if self.ItemNum >= 5:
+                    self.ItemNum = 0
+                    self.Level += 1
 
         elif self.PlSt0 == 2:           # 死に
             # 爆発
@@ -118,6 +123,10 @@ class Player(imp.Sprite):
                 if self.MvWait <= 0:
                     self.Death = 1          # 死ぬ
                     print("pl die")
+
+        elif self.PlSt0 == 3:           # クリア
+            if self.PosY > -100:
+                self.PosY -= 2
 
 
     # 描画
