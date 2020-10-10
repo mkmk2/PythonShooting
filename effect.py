@@ -24,6 +24,10 @@ class Effect(imp.Sprite):
         if self.Id0 == 1:       # 移動する
             shooting_sub.SetVector(self, self.Id1, (random.randrange(5, 20, 1) / 10))
 
+        # Sound
+        if self.Id0 < 4:
+            pyxel.play(0, 0, loop=False)
+
     # メイン
     def EffectMove(self):
         if self.Id0 < 4:       # GameOver以外
