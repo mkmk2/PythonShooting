@@ -5,9 +5,15 @@ import imp
 import random
 import shooting_sub
 import effect
-#from playsound import playsound
 
 PL_SPEED = 1.2
+
+PLST_DEMO = 0
+PLST_PLAY = 1
+PLST_DAMAGE = 2
+PLST_DEATH = 3
+PLST_CLEAR = 4
+
 
 # --------------------------------------------------
 # プレイヤークラス
@@ -22,7 +28,7 @@ class Player(imp.Sprite):
         imp.Sprite.__init__(self, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
 
         self.PlDir = 0              # 上下のパターン切り替え
-        self.PlSt0 = 0              # st0
+        self.PlSt0 = PLST_DEMO      # st0
 
         self.PosX = 128
         self.PosY = 250
@@ -39,18 +45,24 @@ class Player(imp.Sprite):
         if self.PlSt0 == 0:             # デモ
             self.PosY -= 2
             if self.PosY < 200:
-                self.PlSt0 = 1
+                self.PlSt0 = PLST_PLAY
 
         elif self.PlSt0 == 1:           # ゲームプレイ中
 
             if imp.Game_Status == imp.GAME_STATUS_MAIN:     # ゲーム中のみ死にチェック
                 if self.Life <= 0:          # 0以下なら死ぬ
-                    self.PlSt0 = 2          # 死に
+                    self.PlSt0 = PLST_DEATH # 死に
                     self.MvWait = 10        # 爆発数
                     self.MvTime = 0         # 爆発タイマー
 
+                if self.Hit != 0:           # 何かにあたった
+                    self.PlSt0 = PLST_DAMAGE  # ダメージ
+                    self.PtnNo = 0
+                    self.MvWait = 0
+                    self.MvTime = 90
+
             if imp.Game_Status == imp.GAME_STATUS_STAGECLEAR:    # ステージクリア
-                self.PlSt0 = 3          # クリア
+                self.PlSt0 = PLST_CLEAR     # クリア
                 self.PlDir = 0                       # 前
 
             else:
@@ -101,9 +113,6 @@ class Player(imp.Sprite):
                             imp.PlBullet.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
                             imp.PlBullet.append(PlayerBullet(self.PosX + 6, self.PosY, 2, 0, 0))  # 右側
 
-    #                    playsound("shoot1.mp3")
-                        
-
                 else:
                     self.ShotTime = 0
 
@@ -111,7 +120,29 @@ class Player(imp.Sprite):
                     self.ItemNum = 0
                     self.Level += 1
 
-        elif self.PlSt0 == 2:           # 死に
+        elif self.PlSt0 == PLST_DAMAGE:           # ダメージ
+            self.MvWait -= 1
+            if self.MvWait <= 0:
+                self.MvWait = 6
+                if self.PtnNo == 0:
+                    self.PlDir = 0                   # 前
+                    self.PtnNo = 1
+                elif self.PtnNo == 1:
+                    self.PlDir = 1                   # 左
+                    self.PtnNo = 2
+                elif self.PtnNo == 2:
+                    self.PlDir = 2                   # 右
+                    self.PtnNo = 3
+                elif self.PtnNo == 3:
+                    self.PlDir = 1                   # 左
+                    self.PtnNo = 0
+
+            self.MvTime -= 1
+            if self.MvTime <= 0:
+                self.PlSt0 = PLST_PLAY
+
+
+        elif self.PlSt0 == PLST_DEATH:           # 死に
             # 爆発
             self.MvTime -= 1
             if self.MvTime <= 0:
@@ -124,7 +155,7 @@ class Player(imp.Sprite):
                     self.Death = 1          # 死ぬ
                     print("pl die")
 
-        elif self.PlSt0 == 3:           # クリア
+        elif self.PlSt0 == PLST_CLEAR:           # クリア
             if self.PosY > -100:
                 self.PosY -= 2
 

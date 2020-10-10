@@ -148,6 +148,7 @@ class Sprite:
         self.HitRedtX = 0
         self.HitRectY = 0
         self.HitPoint = 0
+        self.Hit = 0                    # 1:何かに当たった
 
 #  ------------------------------------------
 def CheckScreenIn(self):

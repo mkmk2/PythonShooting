@@ -63,18 +63,22 @@ class App:
                 # プレイヤー
                 for n in imp.Pl:
                     n.PlayerMove()
+                    n.Hit = 0
 
                 # 敵
                 for n in imp.Em:
                     n.EnemyMove()
+                    n.Hit = 0
 
                 # プレイヤーの弾
                 for n in imp.PlBullet:
                     n.PlayerBulletMove()
+                    n.Hit = 0
 
                 # 敵の弾
                 for n in imp.EmBullet:
                     n.EnemyBulletMove()
+                    n.Hit = 0
 
                 # エフェクト
                 for n in imp.Eff:
@@ -83,6 +87,7 @@ class App:
                 # アイテム
                 for n in imp.Itm:
                     n.PlItemMove()
+                    n.Hit = 0
 
                 # 当たり判定 ---------------------------------
                 # プレイヤーの弾と敵
@@ -94,6 +99,11 @@ class App:
                 for emb in imp.EmBullet:
                     for p in imp.Pl:
                         self.CheckColli(emb, p)
+
+                # 敵とプレイヤー
+                for em in imp.Em:
+                    for p in imp.Pl:
+                        self.CheckColliBody(em, p)
 
                 # プレイヤーがアイテムをとる
                 for p in imp.Pl:
@@ -226,7 +236,7 @@ class App:
                 imp.Em.append(enemy.Enemy(e[1], e[2], e[3], e[4], e[5]))
 
     #  ------------------------------------------
-    def CheckColli(self, plat, embd):
+    def CheckColli(self, plat, embd):       # plat 攻撃側　　embd ダメージ側
         xx = abs(plat.PosX - embd.PosX)
         yy = abs(plat.PosY - embd.PosY)
 
@@ -238,10 +248,36 @@ class App:
             # エフェクト
             imp.Eff.append(effect.Effect(plat.PosX, plat.PosY, 0, 0, 0))
 
+            plat.Hit = 1
+            embd.Hit = 1
             embd.Life -= plat.HitPoint      # ダメージ計算
             if embd.Life <= 0:              # 0以下なら死ぬ
                 embd.Life = 0
                 print("hit")
+                return True                 # 当たり
+
+        return False                    # 外れ
+
+    #  ------------------------------------------
+    def CheckColliBody(self, at, bd):       # at 攻撃側　　bd ダメージ側
+        xx = abs(at.PosX - bd.PosX)
+        yy = abs(at.PosY - bd.PosY)
+
+        rx = (at.HitRectX / 2) + (bd.HitRectX / 2)
+        ry = (at.HitRectY / 2) + (bd.HitRectY / 2)
+
+        if xx < rx and yy < ry:
+            if at.Id0 != imp.EMBOSS:    # ボス以外
+                at.Death = 1          # 攻撃側は消える
+            # エフェクト
+            imp.Eff.append(effect.Effect(at.PosX, at.PosY, 0, 0, 0))
+
+            at.Hit = 1
+            bd.Hit = 1
+            bd.Life -= 1                  # ダメージ計算
+            if bd.Life <= 0:              # 0以下なら死ぬ
+                bd.Life = 0
+                print("hit body")
                 return True                 # 当たり
 
         return False                    # 外れ
