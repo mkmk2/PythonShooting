@@ -145,6 +145,7 @@ class Sprite:
         self.ScreenTime = 0             # 画面内チェックの開始時間
         self.Score = 0
 
+        self.HitSt = 0                  # 1:当たりナシ
         self.HitRedtX = 0
         self.HitRectY = 0
         self.HitPoint = 0

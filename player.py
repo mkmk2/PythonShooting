@@ -42,6 +42,8 @@ class Player(imp.Sprite):
     # メイン
     def PlayerMove(self):
 
+        self.HitSt = 0                  # 当たりアリ
+
         if self.PlSt0 == 0:             # デモ
             self.PosY -= 2
             if self.PosY < 200:
@@ -59,7 +61,7 @@ class Player(imp.Sprite):
                     self.PlSt0 = PLST_DAMAGE  # ダメージ
                     self.PtnNo = 0
                     self.MvWait = 0
-                    self.MvTime = 90
+                    self.MvTime = 40
 
             if imp.Game_Status == imp.GAME_STATUS_STAGECLEAR:    # ステージクリア
                 self.PlSt0 = PLST_CLEAR     # クリア
@@ -67,36 +69,7 @@ class Player(imp.Sprite):
 
             else:
                 # プレイヤー移動
-                self.PlDir = 0                       # 前
-
-                # 上移動(上カーソルキー)
-                if pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.GAMEPAD_1_UP):
-                    self.PosY -= PL_SPEED
-                    if self.PosY < 50:
-                        self.PosY = 50
-
-                # 下移動(下カーソルキー)
-                if pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.GAMEPAD_1_DOWN):
-                    self.PosY += PL_SPEED
-                    if self.PosY > imp.WINDOW_H - 16:
-                        self.PosY = imp.WINDOW_H - 16
-
-                # 右移動(右カーソルキー)
-                if pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.GAMEPAD_1_RIGHT):
-                    self.PosX += PL_SPEED
-                    self.PlDir = 2                   # 右
-                    if self.PosX > imp.WINDOW_W - 8:
-                        self.PosX = imp.WINDOW_W - 8
-
-                # 左移動(左カーソルキー)
-                if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.GAMEPAD_1_LEFT):
-                    self.PosX -= PL_SPEED
-                    self.PlDir = 1                   # 左
-                    if self.PosX < 8:
-                        self.PosX = 8
-
-                scX = self.PosX - 128
-                imp.TilePosX = -scX / 10
+                self.PlayerLeverMove()
 
                 # 弾セット(スペースキー)
                 if pyxel.btn(pyxel.KEY_SPACE) or pyxel.btn(pyxel.GAMEPAD_1_A) or pyxel.btn(pyxel.GAMEPAD_1_B):
@@ -121,6 +94,12 @@ class Player(imp.Sprite):
                     self.Level += 1
 
         elif self.PlSt0 == PLST_DAMAGE:           # ダメージ
+            self.HitSt = 1                          # 当たりナシ
+            # プレイヤー移動
+            cpDir = self.PlDir       # PlDirの保存・・・
+            self.PlayerLeverMove()
+            self.PlDir = cpDir
+
             self.MvWait -= 1
             if self.MvWait <= 0:
                 self.MvWait = 6
@@ -174,6 +153,40 @@ class Player(imp.Sprite):
 
         # 中心の表示
         shooting_sub.DebugDrawPosHitRect(self)
+
+# --------------------------------------------------
+    # プレイヤー移動
+    def PlayerLeverMove(self):
+        # プレイヤー移動
+        self.PlDir = 0                       # 前
+        # 上移動(上カーソルキー)
+        if pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.GAMEPAD_1_UP):
+            self.PosY -= PL_SPEED
+            if self.PosY < 50:
+                self.PosY = 50
+
+        # 下移動(下カーソルキー)
+        if pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.GAMEPAD_1_DOWN):
+            self.PosY += PL_SPEED
+            if self.PosY > imp.WINDOW_H - 16:
+                self.PosY = imp.WINDOW_H - 16
+
+        # 右移動(右カーソルキー)
+        if pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.GAMEPAD_1_RIGHT):
+            self.PosX += PL_SPEED
+            self.PlDir = 2                   # 右
+            if self.PosX > imp.WINDOW_W - 8:
+                self.PosX = imp.WINDOW_W - 8
+
+        # 左移動(左カーソルキー)
+        if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.GAMEPAD_1_LEFT):
+            self.PosX -= PL_SPEED
+            self.PlDir = 1                   # 左
+            if self.PosX < 8:
+                self.PosX = 8
+
+        scX = self.PosX - 128
+        imp.TilePosX = -scX / 10
 
 # --------------------------------------------------
 # プレイヤークラス

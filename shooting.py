@@ -225,9 +225,9 @@ class App:
             for p in imp.Pl:
                 for n in range(5):
                     if n >= p.Life:
-                        pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
+                        pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 1, 8, 8, 0)  # 空
                     else:
-                        pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
+                        pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
     #  ------------------------------------------
     def SetStageEnemy(self):
         # ステージの位置から敵をセットする
@@ -237,48 +237,52 @@ class App:
 
     #  ------------------------------------------
     def CheckColli(self, plat, embd):       # plat 攻撃側　　embd ダメージ側
-        xx = abs(plat.PosX - embd.PosX)
-        yy = abs(plat.PosY - embd.PosY)
+        if plat.HitSt == 0:
+            if embd.HitSt == 0:
+                xx = abs(plat.PosX - embd.PosX)
+                yy = abs(plat.PosY - embd.PosY)
 
-        rx = (plat.HitRectX / 2) + (embd.HitRectX / 2)
-        ry = (plat.HitRectY / 2) + (embd.HitRectY / 2)
+                rx = (plat.HitRectX / 2) + (embd.HitRectX / 2)
+                ry = (plat.HitRectY / 2) + (embd.HitRectY / 2)
 
-        if xx < rx and yy < ry:
-            plat.Death = 1          # 攻撃側は消える
-            # エフェクト
-            imp.Eff.append(effect.Effect(plat.PosX, plat.PosY, 0, 0, 0))
+                if xx < rx and yy < ry:
+                    plat.Death = 1          # 攻撃側は消える
+                    # エフェクト
+                    imp.Eff.append(effect.Effect(plat.PosX, plat.PosY, 0, 0, 0))
 
-            plat.Hit = 1
-            embd.Hit = 1
-            embd.Life -= plat.HitPoint      # ダメージ計算
-            if embd.Life <= 0:              # 0以下なら死ぬ
-                embd.Life = 0
-                print("hit")
-                return True                 # 当たり
+                    plat.Hit = 1
+                    embd.Hit = 1
+                    embd.Life -= plat.HitPoint      # ダメージ計算
+                    if embd.Life <= 0:              # 0以下なら死ぬ
+                        embd.Life = 0
+                        print("hit")
+                        return True                 # 当たり
 
         return False                    # 外れ
 
     #  ------------------------------------------
     def CheckColliBody(self, at, bd):       # at 攻撃側　　bd ダメージ側
-        xx = abs(at.PosX - bd.PosX)
-        yy = abs(at.PosY - bd.PosY)
+        if at.HitSt == 0:
+            if bd.HitSt == 0:
+                xx = abs(at.PosX - bd.PosX)
+                yy = abs(at.PosY - bd.PosY)
 
-        rx = (at.HitRectX / 2) + (bd.HitRectX / 2)
-        ry = (at.HitRectY / 2) + (bd.HitRectY / 2)
+                rx = (at.HitRectX / 2) + (bd.HitRectX / 2)
+                ry = (at.HitRectY / 2) + (bd.HitRectY / 2)
 
-        if xx < rx and yy < ry:
-            if at.Id0 != imp.EMBOSS:    # ボス以外
-                at.Death = 1          # 攻撃側は消える
-            # エフェクト
-            imp.Eff.append(effect.Effect(at.PosX, at.PosY, 0, 0, 0))
+                if xx < rx and yy < ry:
+                    if at.Id0 != imp.EMBOSS:    # ボス以外
+                        at.Death = 1          # 攻撃側は消える
+                    # エフェクト
+                    imp.Eff.append(effect.Effect(at.PosX, at.PosY, 0, 0, 0))
 
-            at.Hit = 1
-            bd.Hit = 1
-            bd.Life -= 1                  # ダメージ計算
-            if bd.Life <= 0:              # 0以下なら死ぬ
-                bd.Life = 0
-                print("hit body")
-                return True                 # 当たり
+                    at.Hit = 1
+                    bd.Hit = 1
+                    bd.Life -= 1                  # ダメージ計算
+                    if bd.Life <= 0:              # 0以下なら死ぬ
+                        bd.Life = 0
+                        print("hit body")
+                        return True                 # 当たり
 
         return False                    # 外れ
 
