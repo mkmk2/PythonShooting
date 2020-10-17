@@ -26,6 +26,12 @@ EM1 = 1
 EM2 = 2
 EMBOSS = 10
 
+# エフェクトId
+EFF_BOOM = 0
+EFF_BOOM_MOVE = 1
+EFF_GAMEOVER = 4
+EFF_CLEAR = 5
+
 # 敵のセット位置
 STAGE_EM_POS = [            # 時間, X, Y, id0, id1, item
 

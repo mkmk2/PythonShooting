@@ -4,8 +4,11 @@ import random
 import shooting_sub
 
 # Id0
-# 0:
-# 1: 
+# 0:基本爆発
+# 1:基本爆発移動有り
+
+# 4:GAMEOVER
+# 5:CLEAR
 
 # --------------------------------------------------
 # 敵クラス
@@ -30,7 +33,7 @@ class Effect(imp.Sprite):
 
     # メイン
     def EffectMove(self):
-        if self.Id0 < 4:       # GameOver以外
+        if self.Id0 < imp.EFF_GAMEOVER:       # GameOver以外
             self.PtnTime -= 1
             if self.PtnTime <= 0:
                 self.PtnTime = 6
@@ -46,7 +49,7 @@ class Effect(imp.Sprite):
 
     # 描画
     def Draw(self):
-        if self.Id0 < 4:           # GameOver以外
+        if self.Id0 < imp.EFF_GAMEOVER:           # GameOver以外
             if self.PtnNo == 0:
                 x = self.PosX - 4
                 y = self.PosY - 4
@@ -63,11 +66,11 @@ class Effect(imp.Sprite):
                 x = self.PosX - 4
                 y = self.PosY - 4
                 pyxel.blt(x, y, 0, 32, 8*20, 12, 12, 0)
-        elif self.Id0 == 4:           # GameOver
+        elif self.Id0 == imp.EFF_GAMEOVER:           # GameOver
             # GAME OVER
             pyxel.blt(self.PosX,      self.PosY, 0, 0,    8*18, 8*4, 16, 0)
             pyxel.blt(self.PosX + 40, self.PosY, 0, 8*4,  8*18, 8*4, 16, 0)
-        elif self.Id0 == 5:           # STAGE CLEAR
+        elif self.Id0 == imp.EFF_CLEAR:           # STAGE CLEAR
             # STAGE CLEAR
             pyxel.blt(self.PosX - (8 * 4),      self.PosY, 0, 8*8,  8*18, 8*8, 16, 0)
 

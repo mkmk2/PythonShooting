@@ -125,8 +125,8 @@ class Player(imp.Sprite):
             # 爆発
             self.MvTime -= 1
             if self.MvTime <= 0:
-                imp.Eff.append(effect.Effect(self.PosX - 10 + random.randrange(0, 20, 1), self.PosY - 10 + random.randrange(0, 20, 1), 0, 0, 0))
-                imp.Eff.append(effect.Effect(self.PosX - 10 + random.randrange(0, 20, 1), self.PosY - 10 + random.randrange(0, 20, 1), 0, 0, 0))
+                imp.Eff.append(effect.Effect(self.PosX - 10 + random.randrange(0, 20, 1), self.PosY - 10 + random.randrange(0, 20, 1), imp.EFF_BOOM, 0, 0))
+                imp.Eff.append(effect.Effect(self.PosX - 10 + random.randrange(0, 20, 1), self.PosY - 10 + random.randrange(0, 20, 1), imp.EFF_BOOM, 0, 0))
                 self.MvTime = 4
                 self.Display = self.MvWait & 1      # 点滅
                 self.MvWait -= 1

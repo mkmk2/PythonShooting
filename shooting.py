@@ -116,7 +116,7 @@ class App:
                         if p.Death == 1:
                             imp.Game_Status = imp.GAME_STATUS_GAMEOVER       # ゲームオーバー
 
-                            imp.Eff.append(effect.Effect(128 - (8 * 4) - 4, 100, 4, 0, 0))       # GameOver
+                            imp.Eff.append(effect.Effect(128 - (8 * 4) - 4, 100, imp.EFF_GAMEOVER, 0, 0))       # GameOver
 
                 # ボスが死んだらステージクリアへ
                 if imp.Game_Status == imp.GAME_STATUS_MAIN:       # ゲーム中のみ
@@ -125,7 +125,7 @@ class App:
                             if e.Death == 1:
                                 imp.Game_Status = imp.GAME_STATUS_STAGECLEAR       # ステージクリア
 
-                                imp.Eff.append(effect.Effect(128, 100, 5, 0, 0))       # StageClear
+                                imp.Eff.append(effect.Effect(128, 100, imp.EFF_CLEAR, 0, 0))       # StageClear
 
             # オブジェクトを消す ---------------------------------
             # プレイヤーを消す
