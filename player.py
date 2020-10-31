@@ -219,8 +219,7 @@ class PlayerBullet(imp.Sprite):
         self.PosY += self.VectorY
 
         # 画面内チェック
-        if imp.CheckScreenIn(self) == False:
-            self.Death = 1
+        imp.CheckScreenIn(self)
 
     # 描画
     def Draw(self):
