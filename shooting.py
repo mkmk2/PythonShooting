@@ -124,92 +124,94 @@ class App:
                 self.SetStageEnemy()
 
                 # プレイヤー
-                for n in imp.Pl:
-                    n.PlayerMove()
-                    n.Hit = 0
-
-                # 敵
-                for n in imp.Em:
-                    n.update()
-                    n.Hit = 0
+                for p in imp.Pl:
+                    if p.ObjType == imp.OBJPL:
+                        p.update()
+                        p.Hit = 0
 
                 # プレイヤーの弾
-                for n in imp.PlBullet:
-                    n.PlayerBulletMove()
-                    n.Hit = 0
+                for p in imp.Pl:
+                    if p.ObjType == imp.OBJPLB:
+                        p.update()
+                        p.Hit = 0
+
+                # 敵
+                for e in imp.Em:
+                    if e.ObjType == imp.OBJEM:
+                        e.update()
+                        e.Hit = 0
 
                 # 敵の弾
-                for n in imp.EmBullet:
-                    n.EnemyBulletMove()
-                    n.Hit = 0
+                for e in imp.Em:
+                    if e.ObjType == imp.OBJEMB:
+                        e.update()
+                        e.Hit = 0
 
                 # エフェクト
                 for n in imp.Eff:
-                    n.EffectMove()
+                    n.update()
 
                 # アイテム
                 for n in imp.Itm:
-                    n.PlItemMove()
+                    n.update()
                     n.Hit = 0
 
                 # 当たり判定 ---------------------------------
                 # プレイヤーの弾と敵
-                for plat in imp.PlBullet:
-                    for embd in imp.Em:
-                        self.CheckColli(plat, embd)
+                for p in imp.Pl:
+                    if p.ObjType == imp.OBJPLB:
+                        for embd in imp.Em:
+                            if embd.ObjType == imp.OBJEM:
+                                self.CheckColli(p, embd)
 
                 # 敵の弾とプレイヤー
-                for emb in imp.EmBullet:
-                    for p in imp.Pl:
-                        self.CheckColli(emb, p)
+                for em in imp.Em:
+                    if em.ObjType == imp.OBJEMB:
+                        for p in imp.Pl:
+                            if p.ObjType == imp.OBJPL:
+                                self.CheckColli(em, p)
 
                 # 敵とプレイヤー
                 for em in imp.Em:
-                    for p in imp.Pl:
-                        self.CheckColliBody(em, p)
+                    if em.ObjType == imp.OBJEM:
+                        for p in imp.Pl:
+                            if p.ObjType == imp.OBJPL:
+                                self.CheckColliBody(em, p)
 
                 # プレイヤーがアイテムをとる
                 for p in imp.Pl:
-                    for i in imp.Itm:
-                        self.CheckColliPlItm(p, i)
+                    if p.ObjType == imp.OBJPL:
+                        for i in imp.Itm:
+                            self.CheckColliPlItm(p, i)
 
                 # プレイヤーが死んだらゲームオーバーへ
                 if imp.Game_Status != imp.GAME_STATUS_GAMEOVER:       # ゲームオーバーでないとき
                     for p in imp.Pl:
-                        if p.Death == 1:
-                            imp.Game_Status = imp.GAME_STATUS_GAMEOVER       # ゲームオーバー
+                        if p.ObjType == imp.OBJPL:
+                            if p.Death == 1:
+                                imp.Game_Status = imp.GAME_STATUS_GAMEOVER       # ゲームオーバー
 
-                            imp.Eff.append(effect.Effect(128 - (8 * 4) - 4, 100, imp.EFF_GAMEOVER, 0, 0))       # GameOver
+                                imp.Eff.append(effect.Effect(128 - (8 * 4) - 4, 100, imp.EFF_GAMEOVER, 0, 0))       # GameOver
 
                 # ボスが死んだらステージクリアへ
                 if imp.Game_Status == imp.GAME_STATUS_MAIN:       # ゲーム中のみ
                     for e in imp.Em:
-                        if e.Id0 == imp.EMBOSS:
+                        if e.__class__.__name__ == "EnemyBoss":
                             if e.Death == 1:
                                 imp.Game_Status = imp.GAME_STATUS_STAGECLEAR       # ステージクリア
 
                                 imp.Eff.append(effect.Effect(128, 100, imp.EFF_CLEAR, 0, 0))       # StageClear
 
             # オブジェクトを消す ---------------------------------
-            # プレイヤーを消す
+            # プレイヤー・プレイヤーの弾を消す
             for n,p in enumerate(imp.Pl):
                 if p.Death != 0:
                     del imp.Pl[n]     # リストから削除する
-
-            # プレイヤーの弾を消す
-            for n,p in enumerate(imp.PlBullet):
-                if p.Death != 0:
-                    del imp.PlBullet[n]     # リストから削除する
 
             # 敵を消す
             for n,e in enumerate(imp.Em):
                 if e.Death != 0:
                     del imp.Em[n]        # リストから削除する
-
-            # 敵の弾を消す
-            for n,e in enumerate(imp.EmBullet):
-                if e.Death != 0:
-                    del imp.EmBullet[n]        # リストから削除する
 
             # エフェクトを消す
             for n,e in enumerate(imp.Eff):
@@ -250,47 +252,52 @@ class App:
 
         if imp.Game_Status == imp.GAME_STATUS_MAIN or imp.Game_Status == imp.GAME_STATUS_GAMEOVER or imp.Game_Status == imp.GAME_STATUS_STAGECLEAR:
             # プレイヤー
-            for n in imp.Pl:
-                n.Draw()
+            for p in imp.Pl:
+                if p.ObjType == imp.OBJPL:
+                    p.draw()
 
             # プレイヤーの弾
-            for n in imp.PlBullet:
-                n.Draw()
+            for p in imp.Pl:
+                if p.ObjType == imp.OBJPLB:
+                    p.draw()
 
             # 敵
-            for n in imp.Em:
-                n.Draw()
+            for e in imp.Em:
+                if e.ObjType == imp.OBJEM:
+                    e.draw()
 
             # 敵の弾
-            for n in imp.EmBullet:
-                n.Draw()
+            for e in imp.Em:
+                if e.ObjType == imp.OBJEMB:
+                    e.draw()
 
             # エフェクト
             for n in imp.Eff:
-                n.Draw()
+                n.draw()
 
             # アイテム
             for n in imp.Itm:
-                n.Draw()
+                n.draw()
 
             # スコアの表示
             sc = "{:04}".format(imp.Score)
             pyxel.text(100, 10, sc, 7)
 
-            # Itemゲージ
+            # ゲージ
             for p in imp.Pl:
-                for n in range(5):
-                    if n >= p.ItemNum:
-                        pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
-                    else:
-                        pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
-            # Lifeゲージ
-            for p in imp.Pl:
-                for n in range(5):
-                    if n >= p.Life:
-                        pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 1, 8, 8, 0)  # 空
-                    else:
-                        pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
+                if p.ObjType == imp.OBJPL:
+                    # Itemゲージ
+                    for n in range(5):
+                        if n >= p.ItemNum:
+                            pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
+                        else:
+                            pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
+                    # Lifeゲージ
+                    for n in range(5):
+                        if n >= p.Life:
+                            pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 1, 8, 8, 0)  # 空
+                        else:
+                            pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
     #  ------------------------------------------
     def SetStageEnemy(self):
         # ステージの位置から敵をセットする
@@ -336,7 +343,7 @@ class App:
                 ry = (at.HitRectY / 2) + (bd.HitRectY / 2)
 
                 if xx < rx and yy < ry:
-                    if at.Id0 != imp.EMBOSS:    # ボス以外
+                    if at.__class__.__name__ != "EnemyBoss":    # ボス以外
                         at.Death = 1          # 攻撃側は消える
                     # エフェクト
                     imp.Eff.append(effect.Effect(at.PosX, at.PosY, 0, 0, 0))
@@ -370,20 +377,12 @@ class App:
 
     #  ------------------------------------------
     def DeathAllObject(self):
-        # プレイヤーを消す
+        # プレイヤー・プレイヤーの弾を消す
         for p in imp.Pl:
             p.Death = 1
 
-        # プレイヤーの弾を消す
-        for p in imp.PlBullet:
-            p.Death = 1
-
-        # 敵を消す
+        # 敵・敵の弾を消す
         for e in imp.Em:
-            e.Death = 1
-
-        # 敵の弾を消す
-        for e in imp.EmBullet:
             e.Death = 1
 
         # エフェクトを消す

@@ -25,7 +25,7 @@ class Player(imp.Sprite):
 
     # コンストラクタ
     def __init__(self, x, y, id0, id1, item):
-        imp.Sprite.__init__(self, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
+        imp.Sprite.__init__(self, imp.OBJPL, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
 
         self.PlDir = 0              # 上下のパターン切り替え
         self.PlSt0 = PLST_DEMO      # st0
@@ -40,7 +40,7 @@ class Player(imp.Sprite):
         self.HitRectY = 2
 
     # メイン
-    def PlayerMove(self):
+    def update(self):
 
         self.HitSt = 0                  # 当たりアリ
 
@@ -77,14 +77,14 @@ class Player(imp.Sprite):
                     if self.ShotTime < 0:
                         self.ShotTime = 5
                         if self.Level == 0:
-                            imp.PlBullet.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
+                            imp.Pl.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
                         elif self.Level == 1:
-                            imp.PlBullet.append(PlayerBullet(self.PosX - 5, self.PosY, 0, 0, 0))
-                            imp.PlBullet.append(PlayerBullet(self.PosX + 5, self.PosY, 0, 0, 0))
+                            imp.Pl.append(PlayerBullet(self.PosX - 5, self.PosY, 0, 0, 0))
+                            imp.Pl.append(PlayerBullet(self.PosX + 5, self.PosY, 0, 0, 0))
                         else:
-                            imp.PlBullet.append(PlayerBullet(self.PosX - 6, self.PosY, 1, 0, 0))  # 左側
-                            imp.PlBullet.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
-                            imp.PlBullet.append(PlayerBullet(self.PosX + 6, self.PosY, 2, 0, 0))  # 右側
+                            imp.Pl.append(PlayerBullet(self.PosX - 6, self.PosY, 1, 0, 0))  # 左側
+                            imp.Pl.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
+                            imp.Pl.append(PlayerBullet(self.PosX + 6, self.PosY, 2, 0, 0))  # 右側
 
                 else:
                     self.ShotTime = 0
@@ -140,7 +140,7 @@ class Player(imp.Sprite):
 
 
     # 描画
-    def Draw(self):
+    def draw(self):
         x = self.PosX + self.PosAdjX
         y = self.PosY + self.PosAdjY
         
@@ -194,7 +194,7 @@ class PlayerBullet(imp.Sprite):
 
     # コンストラクタ
     def __init__(self, x, y, id0, id1, item):
-        imp.Sprite.__init__(self, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
+        imp.Sprite.__init__(self, imp.OBJPLB, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
 
         self.PosAdjX = -1
         self.PosAdjY = -2
@@ -214,7 +214,7 @@ class PlayerBullet(imp.Sprite):
             self.VectorY = -3.5
 
     # メイン
-    def PlayerBulletMove(self):
+    def update(self):
         self.PosX += self.VectorX
         self.PosY += self.VectorY
 
@@ -222,7 +222,7 @@ class PlayerBullet(imp.Sprite):
         imp.CheckScreenIn(self)
 
     # 描画
-    def Draw(self):
+    def draw(self):
         x = self.PosX + self.PosAdjX
         y = self.PosY + self.PosAdjY
         pyxel.blt(x, y, 0, 32, 0, 2 ,4, 0)

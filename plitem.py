@@ -11,7 +11,7 @@ class PlItem(imp.Sprite):
 
     # コンストラクタ
     def __init__(self, x, y, id0, id1, item):
-        imp.Sprite.__init__(self, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
+        imp.Sprite.__init__(self, imp.OBJITM, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
 
         self.PosAdjX = -4
         self.PosAdjY = -4
@@ -28,7 +28,7 @@ class PlItem(imp.Sprite):
         self.ScreenTime = 120
 
     # メイン
-    def PlItemMove(self):
+    def update(self):
 
         if self.PosVectorY < 0:
             self.PosVectorY += 0.2
@@ -49,7 +49,7 @@ class PlItem(imp.Sprite):
                 self.Death = 1
 
     # 描画
-    def Draw(self):
+    def draw(self):
         x = self.PosX - 4
         y = self.PosY - 4
         pyxel.blt(x, y, 0, 48, 0, 8, 8, 0)

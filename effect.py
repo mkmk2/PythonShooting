@@ -16,7 +16,7 @@ class Effect(imp.Sprite):
 
     # コンストラクタ
     def __init__(self, x, y, id0, id1, item):
-        imp.Sprite.__init__(self, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
+        imp.Sprite.__init__(self, imp.OBJEFF, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
 
         self.PosAdjX = -8
         self.PosAdjY = -4
@@ -32,7 +32,7 @@ class Effect(imp.Sprite):
             pyxel.play(0, 0, loop=False)
 
     # メイン
-    def EffectMove(self):
+    def update(self):
         if self.Id0 < imp.EFF_GAMEOVER:       # GameOver以外
             self.PtnTime -= 1
             if self.PtnTime <= 0:
@@ -48,7 +48,7 @@ class Effect(imp.Sprite):
                 self.PosY += self.VectorY
 
     # 描画
-    def Draw(self):
+    def draw(self):
         if self.Id0 < imp.EFF_GAMEOVER:           # GameOver以外
             if self.PtnNo == 0:
                 x = self.PosX - 4

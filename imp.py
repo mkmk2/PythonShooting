@@ -21,10 +21,12 @@ POS_FIELD_Y = 4
 
 SCREEN_TIME = 100           # 画面外にセットされたあとに画面内判定を開始するまでの時間
 
-EM0 = 0
-EM1 = 1
-EM2 = 2
-EMBOSS = 10
+OBJPL = "OBJPL"
+OBJPLB = "OBJPLB"
+OBJEM = "OBJEM"
+OBJEMB = "OBJEMB"
+OBJEFF = "OBJEFF"
+OBJITM = "OBJITM"
 
 # エフェクトId
 EFF_BOOM = 0
@@ -33,39 +35,11 @@ EFF_GAMEOVER = 4
 EFF_CLEAR = 5
 
 
-TEST_EM_POS = [            # 時間, X, Y, id0, id1
-    [ 20, 180,   0,  EM0,  1,],       #test
-    [ 40, 100,   0,  EM2,  0,],
-
-    [ 50,  40,   0,  EM0,  0,],
-    [100,  60,   0,  EM0,  0,],
-    [150,  80,   0,  EM0,  0,],
-    [200, 100,   0,  EM0,  0,],
-    [250, 120,   0,  EM0,  0,],
-
-    [300, 215,   0,  EM0,  0,],
-    [350, 195,   0,  EM0,  0,],
-    [400, 175,   0,  EM0,  0,],
-    [450, 155,   0,  EM0,  0,],
-    [500, 135,   0,  EM0,  0,],
-
-    [550,  80,   0,  EM1,  0,],
-    [570,  80,   0,  EM1,  0,],
-
-    [ 20, 128,   0, EMBOSS,  0,],   # Boss
-
-]
-
-
-# プレイヤーオブジェクト
+# プレイヤー・プレイヤーの弾オブジェクト
 Pl = []
-# プレイヤーの弾
-PlBullet = []
 
-# 敵オブジェクト
+# 敵・敵の弾オブジェクト
 Em = []
-# 敵の弾
-EmBullet = []
 
 # エフェクト
 Eff = []
@@ -87,7 +61,8 @@ Score = 0
 class Sprite:
 
     # コンストラクタ
-    def __init__(self, x, y, id0, id1, itemset):
+    def __init__(self, obj, x, y, id0, id1, itemset):
+        self.ObjType = obj
         self.PosX = x
         self.PosY = y
         self.VectorX = 0
@@ -131,7 +106,7 @@ def CheckScreenIn(self):
                 return True     # 画面内
 
         self.Death = 1          # 消す
-        print("out")
+        print("out:"+self.__class__.__name__)
         return False            # 画面外
 
     else:
