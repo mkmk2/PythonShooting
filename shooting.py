@@ -15,7 +15,9 @@ STAGE_EM_POS = [            # 時間, X, Y, id0, id1, item
     [ 150,  128-40,   0,  enemy.EnemyWide,  0, 1,],    # 撃ってもどる
     [ 200,  128-40,   0,  enemy.EnemyWide,  0, 1,],    # 撃ってもどる
 
-    [ 500,  128-00,   0,  enemy.EnemyWide,  1, 1,],    # 3Way撃って戻る
+    [ 400,  128-00,   0,  enemy.EnemyWide,  1, 1,],    # 3Way撃って戻る
+
+    [ 500,  128-00,   0,  enemy.EnemyWide,  2, 1,],    # 全方向撃って戻る
 
 #    [ 600,  128-00,   0,  enemy.EnemyWide,  
 # 2, 1,],    # 全方向撃って戻る
@@ -347,13 +349,13 @@ class App:
                         at.Death = 1          # 攻撃側は消える
                     # エフェクト
                     imp.Eff.append(effect.Effect(at.PosX, at.PosY, 0, 0, 0))
+                    print("hit body:" + bd.__class__.__name__)
 
                     at.Hit = 1
                     bd.Hit = 1
                     bd.Life -= 1                  # ダメージ計算
                     if bd.Life <= 0:              # 0以下なら死ぬ
                         bd.Life = 0
-                        print("hit body")
                         return True                 # 当たり
 
         return False                    # 外れ
