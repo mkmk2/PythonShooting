@@ -16,6 +16,7 @@ GAME_STATUS_MAIN = 1
 GAME_STATUS_GAMEOVER = 2
 GAME_STATUS_STAGECLEAR = 3
 
+
 POS_FIELD_X = 10
 POS_FIELD_Y = 4
 
@@ -34,6 +35,8 @@ EFF_BOOM_MOVE = 1
 EFF_GAMEOVER = 4
 EFF_CLEAR = 5
 
+# サブシーン
+SubScene = None             # NextSubScene から SubScene へ入れるときにインスタンス化する、SubScnenに何か入ってたらdelしてから入れる
 
 # プレイヤー・プレイヤーの弾オブジェクト
 Pl = []

@@ -80,6 +80,8 @@ class App:
     imp.TilePosX = 0
     imp.TilePosY = -256 * (8 - 1)
 
+    # サブシーン
+    imp.SubScnene = None
 
     # 初期化---------------------------------------
     def __init__(self):
@@ -106,6 +108,9 @@ class App:
                 self.GameOverTime = 0           # ゲームオーバーの表示時間
                 imp.TilePosX = 0
                 imp.TilePosY = -256 * (8 - 1)
+                # シーンStart セット
+                self.SetNextScene(SceneStart())
+#                imp.SubScene = SceneStart()
 
         elif imp.Game_Status == imp.GAME_STATUS_MAIN or imp.Game_Status == imp.GAME_STATUS_GAMEOVER or imp.Game_Status == imp.GAME_STATUS_STAGECLEAR:
             # ゲームオーバーになったらスクロール(敵セット)止める
@@ -221,6 +226,9 @@ class App:
                 if e.Death != 0:
                     del imp.Itm[n]        # リストから削除する
 
+        if imp.SubScene != None:
+            imp.SubScene.update()
+
 #                    print(n)
 
 #            no = 0                  # リストの何番目かを数える
@@ -228,6 +236,8 @@ class App:
 #                no += 1
 #                if n.Death != 0:
 #                    del App.EmBullet[no - 1]        # リストから削除する
+
+
 
 
     # 画面描画
@@ -296,6 +306,11 @@ class App:
                             pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 1, 8, 8, 0)  # 空
                         else:
                             pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
+
+        # サブシーン
+        if imp.SubScene != None:
+            imp.SubScene.draw()
+
     #  ------------------------------------------
     def SetStageEnemy(self):
         # ステージの位置から敵をセットする
@@ -391,6 +406,36 @@ class App:
         for e in imp.Itm:
             e.Death = 1
 
+    #  ------------------------------------------
+    def SetNextScene(self, nextscene):
+        if imp.SubScene != None:
+            del imp.SubScene
+        imp.SubScene = nextscene
+
+
+# ==================================================
+class SceneStart:
+
+    # 初期化---------------------------------------
+    def __init__(self):
+        self.WaitTime = 60 * 3
+
+    def __del__(self):
+        pass
+
+    # メイン---------------------------------------
+    def update(self):
+        self.WaitTime -= 1
+        if self.WaitTime <= 0:
+            imp.SubScene = None
+        
+    def draw(self):
+        # タイトル画面
+        st = "START"
+        pyxel.text(100, 100, st, 7)
+
+# ==================================================
+
 App()
 
-
+# ==================================================
