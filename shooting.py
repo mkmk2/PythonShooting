@@ -74,12 +74,12 @@ class App:
 
     # ゲームの状態
     imp.Game_Status = imp.GAME_STATUS_TITLE
-    GameOverTime = 0
-    Stage_Pos = 0
 
     imp.TilePosX = 0
     imp.TilePosY = -256 * (8 - 1)
 
+    # メインシーン
+    imp.MainScnene = None
     # サブシーン
     imp.SubScnene = None
 
@@ -87,6 +87,10 @@ class App:
     def __init__(self):
         pyxel.init(imp.WINDOW_W, imp.WINDOW_H, caption="Pyxel Shooting", scale=3, fps=60)
         pyxel.load("assets/my_resource.pyxres")
+
+        # メインScene ゲームメイン セット
+#        self.SetMainScene(SceneGameMain())
+        self.SetNextScene(SceneTitle())
 
         pyxel.run(self.update, self.draw)
 
@@ -96,6 +100,90 @@ class App:
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
 
+        # メインシーン
+        if imp.MainScene != None:
+            imp.MainScene.update()
+
+        # サブシーン
+        if imp.SubScene != None:
+            imp.SubScene.update()
+
+#                    print(n)
+
+#            no = 0                  # リストの何番目かを数える
+#            for n in App.EmBullet:
+#                no += 1
+#                if n.Death != 0:
+#                    del App.EmBullet[no - 1]        # リストから削除する
+
+
+
+
+    # 画面描画
+    def draw(self):
+        # 画面クリア
+        pyxel.cls(13)
+
+        # メインシーン
+        if imp.MainScene != None:
+            imp.MainScene.draw()
+
+        # サブシーン
+        if imp.SubScene != None:
+            imp.SubScene.draw()
+
+#  ------------------------------------------
+    def SetMainScene(self, mainscene):
+        if imp.MainScene != None:
+            del imp.MainScene
+        imp.MainScene = mainscene
+
+#  ------------------------------------------
+    def SetNextScene(self, nextscene):
+        if imp.SubScene != None:
+            del imp.SubScene
+        imp.SubScene = nextscene
+
+# ==================================================
+# Scene タイトル
+class SceneTitle:
+
+    # 初期化---------------------------------------
+    def __init__(self):
+        self.WaitTime = 60 * 3
+
+    def __del__(self):
+        pass
+
+    # メイン---------------------------------------
+    def update(self):
+        self.WaitTime -= 1
+        if self.WaitTime <= 0:
+            imp.SubScene = None
+        
+    def draw(self):
+        # タイトル画面
+        pyxel.bltm(0, 0, 0, 8 * 9, 0, 32, 30)
+
+        st = "TITLE"
+        pyxel.text(100, 100, st, 7)
+
+# ==================================================
+# Scene ゲームメイン
+class SceneGameMain:
+
+    GameOverTime = 0
+    Stage_Pos = 0
+
+    # 初期化---------------------------------------
+    def __init__(self):
+        pass
+
+    def __del__(self):
+        pass
+
+    # メイン---------------------------------------
+    def update(self):
         if imp.Game_Status == imp.GAME_STATUS_TITLE:
             # タイトル画面
             if pyxel.btnp(pyxel.KEY_SPACE) or pyxel.btn(pyxel.GAMEPAD_1_A) or pyxel.btn(pyxel.GAMEPAD_1_B):
@@ -108,9 +196,8 @@ class App:
                 self.GameOverTime = 0           # ゲームオーバーの表示時間
                 imp.TilePosX = 0
                 imp.TilePosY = -256 * (8 - 1)
-                # シーンStart セット
-                self.SetNextScene(SceneStart())
-#                imp.SubScene = SceneStart()
+                # サブシーン Start セット
+                App.SetNextScene(self,SceneStart())
 
         elif imp.Game_Status == imp.GAME_STATUS_MAIN or imp.Game_Status == imp.GAME_STATUS_GAMEOVER or imp.Game_Status == imp.GAME_STATUS_STAGECLEAR:
             # ゲームオーバーになったらスクロール(敵セット)止める
@@ -225,26 +312,8 @@ class App:
             for n,e in enumerate(imp.Itm):
                 if e.Death != 0:
                     del imp.Itm[n]        # リストから削除する
-
-        if imp.SubScene != None:
-            imp.SubScene.update()
-
-#                    print(n)
-
-#            no = 0                  # リストの何番目かを数える
-#            for n in App.EmBullet:
-#                no += 1
-#                if n.Death != 0:
-#                    del App.EmBullet[no - 1]        # リストから削除する
-
-
-
-
-    # 画面描画
+        
     def draw(self):
-        # 画面クリア
-        pyxel.cls(13)
-
         # タイル描画
         if imp.Game_Status == imp.GAME_STATUS_TITLE:
             # タイトル画面
@@ -306,10 +375,6 @@ class App:
                             pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 1, 8, 8, 0)  # 空
                         else:
                             pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
-
-        # サブシーン
-        if imp.SubScene != None:
-            imp.SubScene.draw()
 
     #  ------------------------------------------
     def SetStageEnemy(self):
@@ -406,14 +471,9 @@ class App:
         for e in imp.Itm:
             e.Death = 1
 
-    #  ------------------------------------------
-    def SetNextScene(self, nextscene):
-        if imp.SubScene != None:
-            del imp.SubScene
-        imp.SubScene = nextscene
-
 
 # ==================================================
+# Scene スタート
 class SceneStart:
 
     # 初期化---------------------------------------

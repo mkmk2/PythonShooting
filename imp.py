@@ -36,6 +36,7 @@ EFF_GAMEOVER = 4
 EFF_CLEAR = 5
 
 # サブシーン
+MainScene = None
 SubScene = None             # NextSubScene から SubScene へ入れるときにインスタンス化する、SubScnenに何か入ってたらdelしてから入れる
 
 # プレイヤー・プレイヤーの弾オブジェクト
