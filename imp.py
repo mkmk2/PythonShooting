@@ -32,8 +32,6 @@ OBJITM = "OBJITM"
 # エフェクトId
 EFF_BOOM = 0
 EFF_BOOM_MOVE = 1
-EFF_GAMEOVER = 4
-EFF_CLEAR = 5
 
 # サブシーン
 MainScene = None
