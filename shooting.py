@@ -209,7 +209,6 @@ class SceneGameMain:
 
                     imp.MainScene = None
 
-                    # メインScene タイトル　セット
                     # サブScene タイトル　セット
                     App.SetSubScene(self,SceneTitle())
 
