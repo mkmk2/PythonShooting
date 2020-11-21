@@ -64,10 +64,12 @@ class EnemyNorm(imp.Sprite):
         if self.Life <= 0:          # 0以下なら死ぬ
             self.Death = 1          # 死ぬ
             imp.Score += self.Score     # Scoreを加算
-            print("enemy die")
+            if imp._DEBUG_ == True:
+                print("enemy die")
             # アイテムセット
             if self.ItemSet != 0:
-                print("item")
+                if imp._DEBUG_ == True:
+                    print("item")
                 imp.Itm.append(plitem.PlItem(self.PosX,self.PosY,0,0,0))
 
         # 画面内チェック
@@ -191,10 +193,12 @@ class EnemyWide(imp.Sprite):
         if self.Life <= 0:          # 0以下なら死ぬ
             self.Death = 1          # 死ぬ
             imp.Score += self.Score     # Scoreを加算
-            print("enemy die")
+            if imp._DEBUG_ == True:
+                print("enemy die")
             # アイテムセット
             if self.ItemSet != 0:
-                print("item")
+                if imp._DEBUG_ == True:
+                    print("item")
                 imp.Itm.append(plitem.PlItem(self.PosX,self.PosY,0,0,0))
 
         # 画面内チェック
@@ -373,7 +377,8 @@ class EnemyBoss(imp.Sprite):
         # Boss死にチェック
         if self.Life <= 0 and self.St0 != EMBOSS_BOMB:          # 0以下なら死ぬ
             self.St0 = EMBOSS_BOMB
-            print("boss die")
+            if imp._DEBUG_ == True:
+                print("boss die")
             self.MvWait = 30       # 爆発数
             self.MvTime = 0         # 爆発タイマー
             imp.Score += self.Score     # Scoreを加算(自爆は加算しない)

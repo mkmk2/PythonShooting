@@ -404,7 +404,8 @@ class SceneGameMain:
                     embd.Life -= plat.HitPoint      # ダメージ計算
                     if embd.Life <= 0:              # 0以下なら死ぬ
                         embd.Life = 0
-                        print("hit")
+                        if imp._DEBUG_ == True:
+                            print("hit")
                         return True                 # 当たり
 
         return False                    # 外れ
@@ -424,7 +425,8 @@ class SceneGameMain:
                         at.Death = 1          # 攻撃側は消える
                     # エフェクト
                     imp.Eff.append(effect.Effect(at.PosX, at.PosY, 0, 0, 0))
-                    print("hit body:" + bd.__class__.__name__)
+                    if imp._DEBUG_ == True:
+                        print("hit body:" + bd.__class__.__name__)
 
                     at.Hit = 1
                     bd.Hit = 1
@@ -446,7 +448,8 @@ class SceneGameMain:
         if xx < rx and yy < ry:
             i.Death = 1
             
-            print("item")
+            if imp._DEBUG_ == True:
+                print("item")
             p.ItemNum += 1              # 1個とる
             return True                 # 当たり
 

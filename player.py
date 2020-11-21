@@ -132,7 +132,8 @@ class Player(imp.Sprite):
                 self.MvWait -= 1
                 if self.MvWait <= 0:
                     self.Death = 1          # 死ぬ
-                    print("pl die")
+                    if imp._DEBUG_ == True:
+                        print("pl die")
 
         elif self.PlSt0 == PLST_CLEAR:           # クリア
             if self.PosY > -100:

@@ -108,7 +108,8 @@ def CheckScreenIn(self):
                 return True     # 画面内
 
         self.Death = 1          # 消す
-        print("out:"+self.__class__.__name__)
+        if _DEBUG_ == True:
+            print("out:"+self.__class__.__name__)
         return False            # 画面外
 
     else:
