@@ -34,6 +34,8 @@ STAGE_EM_POS = [            # 時間, X, Y, id0, id1, item
 
     [ 150,  128-40,   0,  enemy.EnemyWide,  0, 1,],    # 撃ってもどる
 
+    [ 200,  128,      0,  enemy.EnemyBoss,  0, 0,],    # Boss
+
     [ 200,  128-60,   0,  enemy.EnemyWide,  0, 0,],    # まっすぐ
     [ 240,  128-60,   0,  enemy.EnemyWide,  0, 0,],
     [ 280,  128-60,   0,  enemy.EnemyWide,  0, 1,],
@@ -149,7 +151,7 @@ class SceneTitle:
 
     # 初期化---------------------------------------
     def __init__(self):
-        pass
+        imp.Game_Status = imp.GAME_STATUS_TITLE    # タイトルに戻る
 
     def __del__(self):
         pass
@@ -178,7 +180,6 @@ class SceneTitle:
 # Scene ゲームメイン
 class SceneGameMain:
 
-    GameOverTime = 0
     Stage_Pos = 0
 
     # 初期化---------------------------------------
@@ -187,134 +188,119 @@ class SceneGameMain:
 
         self.Stage_Pos = 0              # ステージ
         imp.Score = 0                  # スコア
-        self.GameOverTime = 0           # ゲームオーバーの表示時間
         imp.TilePosX = 0
         imp.TilePosY = -256 * (8 - 1)
 
     def __del__(self):
-        pass
+        # 全てのオブジェクトを消す
+        self.DeathAllObject()
 
     # メイン---------------------------------------
     def update(self):
-        if imp.Game_Status == imp.GAME_STATUS_MAIN or imp.Game_Status == imp.GAME_STATUS_GAMEOVER or imp.Game_Status == imp.GAME_STATUS_STAGECLEAR:
-            # ゲームオーバーになったらスクロール(敵セット)止める
-            if imp.Game_Status == imp.GAME_STATUS_MAIN:
-                self.Stage_Pos += 1
-            else:
-                self.GameOverTime += 1          # ゲームオーバーの表示時間
-                if self.GameOverTime >= 60 * 5:
-                    imp.Game_Status = imp.GAME_STATUS_TITLE    # タイトルに戻る
-                    # 全てのオブジェクトを消す
-                    self.DeathAllObject()
+        # ゲームオーバーになったらスクロール(敵セット)止める
+        if imp.Game_Status == imp.GAME_STATUS_MAIN:
+            self.Stage_Pos += 1
 
-                    imp.MainScene = None
+        self.SetStageEnemy()
 
-                    # サブScene タイトル　セット
-                    App.SetSubScene(self,SceneTitle())
+        # プレイヤー
+        for p in imp.Pl:
+            if p.ObjType == imp.OBJPL:
+                p.update()
+                p.Hit = 0
 
-            self.SetStageEnemy()
+        # プレイヤーの弾
+        for p in imp.Pl:
+            if p.ObjType == imp.OBJPLB:
+                p.update()
+                p.Hit = 0
 
-            # プレイヤー
-            for p in imp.Pl:
-                if p.ObjType == imp.OBJPL:
-                    p.update()
-                    p.Hit = 0
+        # 敵
+        for e in imp.Em:
+            if e.ObjType == imp.OBJEM:
+                e.update()
+                e.Hit = 0
 
-            # プレイヤーの弾
-            for p in imp.Pl:
-                if p.ObjType == imp.OBJPLB:
-                    p.update()
-                    p.Hit = 0
+        # 敵の弾
+        for e in imp.Em:
+            if e.ObjType == imp.OBJEMB:
+                e.update()
+                e.Hit = 0
 
-            # 敵
-            for e in imp.Em:
-                if e.ObjType == imp.OBJEM:
-                    e.update()
-                    e.Hit = 0
+        # エフェクト
+        for n in imp.Eff:
+            n.update()
 
-            # 敵の弾
-            for e in imp.Em:
-                if e.ObjType == imp.OBJEMB:
-                    e.update()
-                    e.Hit = 0
+        # アイテム
+        for n in imp.Itm:
+            n.update()
+            n.Hit = 0
 
-            # エフェクト
-            for n in imp.Eff:
-                n.update()
+        # 当たり判定 ---------------------------------
+        # プレイヤーの弾と敵
+        for p in imp.Pl:
+            if p.ObjType == imp.OBJPLB:
+                for embd in imp.Em:
+                    if embd.ObjType == imp.OBJEM:
+                        self.CheckColli(p, embd)
 
-            # アイテム
-            for n in imp.Itm:
-                n.update()
-                n.Hit = 0
-
-            # 当たり判定 ---------------------------------
-            # プレイヤーの弾と敵
-            for p in imp.Pl:
-                if p.ObjType == imp.OBJPLB:
-                    for embd in imp.Em:
-                        if embd.ObjType == imp.OBJEM:
-                            self.CheckColli(p, embd)
-
-            # 敵の弾とプレイヤー
-            for em in imp.Em:
-                if em.ObjType == imp.OBJEMB:
-                    for p in imp.Pl:
-                        if p.ObjType == imp.OBJPL:
-                            self.CheckColli(em, p)
-
-            # 敵とプレイヤー
-            for em in imp.Em:
-                if em.ObjType == imp.OBJEM:
-                    for p in imp.Pl:
-                        if p.ObjType == imp.OBJPL:
-                            self.CheckColliBody(em, p)
-
-            # プレイヤーがアイテムをとる
-            for p in imp.Pl:
-                if p.ObjType == imp.OBJPL:
-                    for i in imp.Itm:
-                        self.CheckColliPlItm(p, i)
-
-            # プレイヤーが死んだらゲームオーバーへ
-            if imp.Game_Status != imp.GAME_STATUS_GAMEOVER:       # ゲームオーバーでないとき
+        # 敵の弾とプレイヤー
+        for em in imp.Em:
+            if em.ObjType == imp.OBJEMB:
                 for p in imp.Pl:
                     if p.ObjType == imp.OBJPL:
-                        if p.Death == 1:
-                            imp.Game_Status = imp.GAME_STATUS_GAMEOVER       # ゲームオーバー
+                        self.CheckColli(em, p)
 
-                            # サブシーン ゲームオーバー セット
-                            App.SetSubScene(self,SceneGameOver())
+        # 敵とプレイヤー
+        for em in imp.Em:
+            if em.ObjType == imp.OBJEM:
+                for p in imp.Pl:
+                    if p.ObjType == imp.OBJPL:
+                        self.CheckColliBody(em, p)
 
-            # ボスが死んだらステージクリアへ
-            if imp.Game_Status == imp.GAME_STATUS_MAIN:       # ゲーム中のみ
-                for e in imp.Em:
-                    if e.__class__.__name__ == "EnemyBoss":
-                        if e.Death == 1:
-                            imp.Game_Status = imp.GAME_STATUS_STAGECLEAR       # ステージクリア
+        # プレイヤーがアイテムをとる
+        for p in imp.Pl:
+            if p.ObjType == imp.OBJPL:
+                for i in imp.Itm:
+                    self.CheckColliPlItm(p, i)
 
-                            # サブシーン ゲームクリアー　セット
-                            App.SetSubScene(self,SceneGameClear())
+        # プレイヤーが死んだらゲームオーバーへ
+        if imp.Game_Status != imp.GAME_STATUS_GAMEOVER:       # ゲームオーバーでないとき
+            for p in imp.Pl:
+                if p.ObjType == imp.OBJPL:
+                    if p.Death == 1:
+                        # サブシーン ゲームオーバー セット
+                        App.SetSubScene(self,SceneGameOver())
 
-            # オブジェクトを消す ---------------------------------
-            # プレイヤー・プレイヤーの弾を消す
-            for n,p in enumerate(imp.Pl):
-                if p.Death != 0:
-                    del imp.Pl[n]     # リストから削除する
+        # ボスが死んだらステージクリアへ
+        if imp.Game_Status == imp.GAME_STATUS_MAIN:       # ゲーム中のみ
+            for e in imp.Em:
+                if e.__class__.__name__ == "EnemyBoss":
+                    if e.Death == 1:
 
-            # 敵を消す
-            for n,e in enumerate(imp.Em):
-                if e.Death != 0:
-                    del imp.Em[n]        # リストから削除する
+                        # サブシーン ゲームクリアー　セット
+                        App.SetSubScene(self,SceneGameClear())
 
-            # エフェクトを消す
-            for n,e in enumerate(imp.Eff):
-                if e.Death != 0:
-                    del imp.Eff[n]        # リストから削除する
+        # オブジェクトを消す ---------------------------------
+        # プレイヤー・プレイヤーの弾を消す
+        for n,p in enumerate(imp.Pl):
+            if p.Death != 0:
+                del imp.Pl[n]     # リストから削除する
 
-            # アイテムを消す
-            for n,e in enumerate(imp.Itm):
-                if e.Death != 0:
-                    del imp.Itm[n]        # リストから削除する
+        # 敵を消す
+        for n,e in enumerate(imp.Em):
+            if e.Death != 0:
+                del imp.Em[n]        # リストから削除する
+
+        # エフェクトを消す
+        for n,e in enumerate(imp.Eff):
+            if e.Death != 0:
+                del imp.Eff[n]        # リストから削除する
+
+        # アイテムを消す
+        for n,e in enumerate(imp.Itm):
+            if e.Death != 0:
+                del imp.Itm[n]        # リストから削除する
         
     def draw(self):
         # タイル描画
@@ -459,19 +445,23 @@ class SceneGameMain:
     def DeathAllObject(self):
         # プレイヤー・プレイヤーの弾を消す
         for p in imp.Pl:
-            p.Death = 1
+#            p.Death = 1
+            del p
 
         # 敵・敵の弾を消す
         for e in imp.Em:
-            e.Death = 1
+#            e.Death = 1
+            del e
 
         # エフェクトを消す
         for e in imp.Eff:
-            e.Death = 1
+#            e.Death = 1
+            del e
 
         # アイテムを消す
         for e in imp.Itm:
-            e.Death = 1
+#            e.Death = 1
+            del e
 
 
 # ==================================================
@@ -502,6 +492,8 @@ class SceneGameOver:
 
     # 初期化---------------------------------------
     def __init__(self):
+        imp.Game_Status = imp.GAME_STATUS_GAMEOVER       # ゲームオーバー
+
         self.PosX = 128 - (8 * 4) - 4
         self.PosY = 100
         self.WaitTime = 60 * 5
@@ -513,7 +505,10 @@ class SceneGameOver:
     def update(self):
         self.WaitTime -= 1
         if self.WaitTime <= 0:
-            imp.SubScene = None
+            # メイン ゲームシーンのデリート
+            App.SetMainScene(self,None)
+            # サブScene タイトル　セット
+            App.SetSubScene(self,SceneTitle())
         
     def draw(self):
         # GAME OVER
@@ -525,6 +520,8 @@ class SceneGameOver:
 class SceneGameClear:
     # 初期化---------------------------------------
     def __init__(self):
+        imp.Game_Status = imp.GAME_STATUS_STAGECLEAR       # ステージクリア
+
         self.PosX = 128 - (8 * 4) - 4
         self.PosY = 100
         self.WaitTime = 60 * 5
@@ -536,7 +533,10 @@ class SceneGameClear:
     def update(self):
         self.WaitTime -= 1
         if self.WaitTime <= 0:
-            imp.SubScene = None
+            # メイン ゲームシーンのデリート
+            App.SetMainScene(self,None)
+            # サブScene タイトル　セット
+            App.SetSubScene(self,SceneTitle())
         
     def draw(self):
         # STAGE CLEAR
