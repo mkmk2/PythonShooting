@@ -444,25 +444,16 @@ class SceneGameMain:
     #  ------------------------------------------
     def DeathAllObject(self):
         # プレイヤー・プレイヤーの弾を消す
-        for p in imp.Pl:
-#            p.Death = 1
-            del p
+        imp.Pl.clear()
 
-        # 敵・敵の弾を消す
-        for e in imp.Em:
-#            e.Death = 1
-            del e
+        # 敵を消す
+        imp.Em.clear()
 
         # エフェクトを消す
-        for e in imp.Eff:
-#            e.Death = 1
-            del e
+        imp.Eff.clear()
 
         # アイテムを消す
-        for e in imp.Itm:
-#            e.Death = 1
-            del e
-
+        imp.Itm.clear()
 
 # ==================================================
 # Scene スタート

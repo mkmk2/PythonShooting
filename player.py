@@ -39,6 +39,9 @@ class Player(imp.Sprite):
         self.HitRectX = 2
         self.HitRectY = 2
 
+    def __del__(self):
+        pass
+
     # メイン
     def update(self):
 
