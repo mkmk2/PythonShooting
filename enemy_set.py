@@ -58,6 +58,13 @@ STAGE_SET_3 = [
     [ 500,  128,      0,  enemy.EnemyBoss,  0, 0, 0,],    # Boss
 ]
 
+STAGE_SET_4 = [
+    # 時間, X, Y, class, id0, id1, item
+    [ 150,  128-40,   0,  enemy.EnemyWide,  0, 0, 1,],    # 撃ってもどる
+
+    [ 500,  128,      0,  enemy.EnemyBoss,  0, 0, 0,],    # Boss
+]
+
 STAGE_SET_TEST = [
     # 時間, X, Y, class, id0, id1, item
     [ 150,  128-40,   0,  enemy.EnemyWide,  0, 0, 1,],    # 撃ってもどる

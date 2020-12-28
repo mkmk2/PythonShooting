@@ -1,5 +1,5 @@
 
-_DEBUG_ = False
+_DEBUG_ = True
 
 WINDOW_W = 255
 WINDOW_H = 240
@@ -58,8 +58,10 @@ Game_Status = GAME_STATUS_TITLE
 # スコア
 Score = 0
 
-# ステージNo
+# ステージNo(1から)
 StageNo = 0
+
+STAGE_NO_MAX = 4       # 最終ステージ
 
 # 敵セットTbl
 StageSetTbl = ""

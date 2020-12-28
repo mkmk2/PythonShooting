@@ -66,9 +66,18 @@ class App:
         if imp.MainScene != None:
             imp.MainScene.draw()
 
+            if imp._DEBUG_ == True:
+                sc = imp.MainScene.__class__.__name__
+                pyxel.text(0, 1, sc, 7)
+
         # サブシーン
         if imp.SubScene != None:
             imp.SubScene.draw()
+
+            if imp._DEBUG_ == True:
+                sc = imp.SubScene.__class__.__name__
+                pyxel.text(0, 9, sc, 7)
+
 
 #  ------------------------------------------
     def SetMainScene(self, mainscene):
@@ -93,7 +102,7 @@ class SceneTitle:
         imp.Game_Status = imp.GAME_STATUS_TITLE    # タイトルに戻る
 
         self.SelectPos = 0
-        imp.StageNo = 0
+        imp.StageNo = 1
 
     def __del__(self):
         pass
@@ -111,20 +120,22 @@ class SceneTitle:
             if self.SelectPos == 0:
                 self.SelectPos += 1
 
-        # 右移動(右カーソルキー)
+        # 右移動(右カーソルキー) UP
         if pyxel.btnp(pyxel.KEY_RIGHT) or pyxel.btnp(pyxel.GAMEPAD_1_RIGHT):
-            if imp.StageNo == 0:
+            if imp.StageNo < imp.STAGE_NO_MAX:
                 imp.StageNo += 1
 
-        # 左移動(左カーソルキー)
+        # 左移動(左カーソルキー) DOWN
         if pyxel.btnp(pyxel.KEY_LEFT) or pyxel.btnp(pyxel.GAMEPAD_1_LEFT):
-            if imp.StageNo > 0:
+            if imp.StageNo > 1:
                 imp.StageNo -= 1
 
         if pyxel.btnp(pyxel.KEY_SPACE) or pyxel.btn(pyxel.GAMEPAD_1_A) or pyxel.btn(pyxel.GAMEPAD_1_B):
             if self.SelectPos == 1:
                 imp.StageNo += 10               # テストステージは+10
 
+            imp.Score = 0                  # スコア
+            
             # メインシーン ゲームメイン セット
             App.SetMainScene(self,SceneGameMain())
 
@@ -163,12 +174,14 @@ class SceneGameMain:
 
         # 敵セットのテーブル
         if imp.StageNo < 10:
-            if imp.StageNo == 0:
+            if imp.StageNo == 1:
                 imp.StageSetTbl = enemy_set.STAGE_SET_1
-            elif imp.StageNo == 1:
+            elif imp.StageNo == 2:
                 imp.StageSetTbl = enemy_set.STAGE_SET_2
-            else:
+            elif imp.StageNo == 3:
                 imp.StageSetTbl = enemy_set.STAGE_SET_3
+            else:
+                imp.StageSetTbl = enemy_set.STAGE_SET_4
         else:
             imp.StageSetTbl = enemy_set.STAGE_SET_TEST
 
@@ -177,7 +190,6 @@ class SceneGameMain:
         # プレイヤーのセット
         imp.Pl.append(player.Player(30, 40, 0, 100, 0))
 
-        imp.Score = 0                  # スコア
         imp.TilePosX = 0
         imp.TilePosY = -256 * (8 - 1)
 
@@ -350,6 +362,7 @@ class SceneGameMain:
                             pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 1, 8, 8, 0)  # 空
                         else:
                             pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
+
 
     #  ------------------------------------------
     def SetStageEnemy(self):
@@ -543,11 +556,17 @@ class SceneNextStage:
     def update(self):
             # メインシーン ゲームメイン セット
             imp.StageNo += 1
+            if imp.StageNo > imp.STAGE_NO_MAX:
+                # メイン ゲームシーンのデリート
+                App.SetMainScene(self,None)
+                # サブシーン Start セット
+                App.SetSubScene(self,SceneTitle())
+            else:
+                # 次のステージ
+                App.SetMainScene(self,SceneGameMain())
 
-            App.SetMainScene(self,SceneGameMain())
-
-            # サブシーン Start セット
-            App.SetSubScene(self,SceneStart())
+                # サブシーン Start セット
+                App.SetSubScene(self,SceneStart())
 
     def draw(self):
         pass
