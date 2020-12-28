@@ -15,6 +15,7 @@ GAME_STATUS_TITLE = 0
 GAME_STATUS_MAIN = 1
 GAME_STATUS_GAMEOVER = 2
 GAME_STATUS_STAGECLEAR = 3
+GAME_STATUS_NEXTSTAGE = 4
 
 
 POS_FIELD_X = 10
@@ -57,6 +58,11 @@ Game_Status = GAME_STATUS_TITLE
 # スコア
 Score = 0
 
+# ステージNo
+StageNo = 0
+
+# 敵セットTbl
+StageSetTbl = ""
 
 # --------------------------------------------------
 # スプライト表示の共通クラス

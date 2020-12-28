@@ -6,67 +6,7 @@ import player
 import enemy
 import effect
 import plitem
-
-# --------------------------------------------------
-# 敵のセット位置
-STAGE_EM_POS = [            # 時間, X, Y, class, id0, id1, item
-
-#    [ 100,  128-40,   0,  enemy.EnemyWide,  0, 1,],    # 撃ってもどる
-#    [ 150,  128-40,   0,  enemy.EnemyWide,  0, 1,],    # 撃ってもどる
-#    [ 200,  128-40,   0,  enemy.EnemyWide,  0, 1,],    # 撃ってもどる
-
-#    [ 400,  128-00,   0,  enemy.EnemyWide,  1, 1,],    # 3Way撃って戻る
-
-#    [ 500,  128-00,   0,  enemy.EnemyWide,  2, 1,],    # 全方向撃って戻る
-
-#    [ 600,  128-60,   0,  enemy.EnemyWide,  3, 0,],    # まっすぐ
-
-#    [ 700,  128-20,   0,  enemy.EnemyNorm,  0, 0,],    # カーブ
-
-#    [1000,  128-20,   0,  enemy.EnemyBoss,  0, 0,],    # ボス
-
-
-# 敵のセット位置
-#STAGE_EM_POS = [            # 時間, X, Y, id0, id1, item
-
-
-    [ 150,  128-40,   0,  enemy.EnemyWide,  0, 0, 1,],    # 撃ってもどる
-
-#    [ 200,  128,      0,  enemy.EnemyBoss,  0, 0, 0,],    # Boss
-
-    [ 200,  128-60,   0,  enemy.EnemyWide,  0, 0, 0,],    # まっすぐ
-    [ 240,  128-60,   0,  enemy.EnemyWide,  0, 0, 0,],
-    [ 280,  128-60,   0,  enemy.EnemyWide,  0, 0, 1,],
-
-    [ 500,  128+60,   0,  enemy.EnemyWide,  0, 0, 0,],
-    [ 540,  128+60,   0,  enemy.EnemyWide,  0, 0, 0,],
-    [ 580,  128+60,   0,  enemy.EnemyWide,  0, 0, 1,],
-
-    [ 760,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],    # カーブ
-    [ 780,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [ 800,  128-60,   0,  enemy.EnemyNorm,  0, 0, 1,],
-
-    [1000,  128+20,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1020,  128+40,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1040,  128+60,   0,  enemy.EnemyNorm,  0, 0, 1,],
-
-    [1300,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],    # カーブ
-    [1340,  128-60,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1380,  128-80,   0,  enemy.EnemyNorm,  0, 0, 1,],
-
-    [1600,  128+40,   0,  enemy.EnemyNorm,  0, 0, 1,],
-    [1640,  128+60,   0,  enemy.EnemyNorm,  0, 0, 1,],
-    [1680,  128+80,   0,  enemy.EnemyNorm,  0, 0, 1,],
-
-    [1750,  128-40,   0,  enemy.EnemyWide,  0, 0, 1,],    # 撃ってもどる
-    [1800,  128+40,   0,  enemy.EnemyWide,  0, 0, 1,],
-
-    [1900,  128-00,   0,  enemy.EnemyWide,  2, 0, 1,],    # 全方向撃って戻る
-    [2300,  128-40,   0,  enemy.EnemyWide,  2, 0, 1,],    # 全方向撃って戻る
-    [2700,  128+40,   0,  enemy.EnemyWide,  2, 0, 1,],    # 全方向撃って戻る
-
-    [3500,  128,      0,  enemy.EnemyBoss,  0, 0, 0,],    # Boss
-]
+import enemy_set
 
 # ==================================================
 class App:
@@ -146,9 +86,14 @@ class App:
 # Scene タイトル
 class SceneTitle:
 
+    SelectPos = 0
+
     # 初期化---------------------------------------
     def __init__(self):
         imp.Game_Status = imp.GAME_STATUS_TITLE    # タイトルに戻る
+
+        self.SelectPos = 0
+        imp.StageNo = 0
 
     def __del__(self):
         pass
@@ -156,8 +101,29 @@ class SceneTitle:
     # メイン---------------------------------------
     def update(self):
         # タイトル画面
+        # 上移動(上カーソルキー)
+        if pyxel.btnp(pyxel.KEY_UP) or pyxel.btnp(pyxel.GAMEPAD_1_UP):
+            if self.SelectPos > 0:
+                self.SelectPos -= 1
+
+        # 下移動(下カーソルキー)
+        if pyxel.btnp(pyxel.KEY_DOWN) or pyxel.btnp(pyxel.GAMEPAD_1_DOWN):
+            if self.SelectPos == 0:
+                self.SelectPos += 1
+
+        # 右移動(右カーソルキー)
+        if pyxel.btnp(pyxel.KEY_RIGHT) or pyxel.btnp(pyxel.GAMEPAD_1_RIGHT):
+            if imp.StageNo == 0:
+                imp.StageNo += 1
+
+        # 左移動(左カーソルキー)
+        if pyxel.btnp(pyxel.KEY_LEFT) or pyxel.btnp(pyxel.GAMEPAD_1_LEFT):
+            if imp.StageNo > 0:
+                imp.StageNo -= 1
+
         if pyxel.btnp(pyxel.KEY_SPACE) or pyxel.btn(pyxel.GAMEPAD_1_A) or pyxel.btn(pyxel.GAMEPAD_1_B):
-            imp.Game_Status = imp.GAME_STATUS_MAIN
+            if self.SelectPos == 1:
+                imp.StageNo += 10               # テストステージは+10
 
             # メインシーン ゲームメイン セット
             App.SetMainScene(self,SceneGameMain())
@@ -169,9 +135,20 @@ class SceneTitle:
         # タイトル画面
         pyxel.bltm(0, 0, 0, 8 * 9, 0, 32, 30)
 
-        st = "TITLE"
-        pyxel.text(100, 100, st, 7)
+        ti = "TITLE"
+        pyxel.text(100, 100, ti, 7)
 
+        st = ">"
+        pyxel.text(100-10, 180 + (self.SelectPos * 10), st, 7)
+
+        st = " START"
+        pyxel.text(100, 180, st, 7)
+        test = " TEST"
+        pyxel.text(100, 190, test, 7)
+
+        # ステージNoの表示
+        no = "{:02}".format(imp.StageNo)
+        pyxel.text(180, 180, no, 7)
 
 # ==================================================
 # Scene ゲームメイン
@@ -181,9 +158,25 @@ class SceneGameMain:
 
     # 初期化---------------------------------------
     def __init__(self):
-        imp.Pl.append(player.Player(30, 40, 0, 100, 0))
+
+        imp.Game_Status = imp.GAME_STATUS_MAIN
+
+        # 敵セットのテーブル
+        if imp.StageNo < 10:
+            if imp.StageNo == 0:
+                imp.StageSetTbl = enemy_set.STAGE_SET_1
+            elif imp.StageNo == 1:
+                imp.StageSetTbl = enemy_set.STAGE_SET_2
+            else:
+                imp.StageSetTbl = enemy_set.STAGE_SET_3
+        else:
+            imp.StageSetTbl = enemy_set.STAGE_SET_TEST
 
         self.Stage_Pos = 0              # ステージ
+
+        # プレイヤーのセット
+        imp.Pl.append(player.Player(30, 40, 0, 100, 0))
+
         imp.Score = 0                  # スコア
         imp.TilePosX = 0
         imp.TilePosY = -256 * (8 - 1)
@@ -361,23 +354,17 @@ class SceneGameMain:
     #  ------------------------------------------
     def SetStageEnemy(self):
         # ステージの位置から敵をセットする
-        l = len(STAGE_EM_POS)
+        l = len(imp.StageSetTbl)
         n = 0
 
         while l > 0:
-            e = STAGE_EM_POS[n]
+            e = imp.StageSetTbl[n]
             if self.Stage_Pos == e[0]:
                 t = e[3]
                 imp.Em.append(t(e[1], e[2], e[4], e[5], e[6]))
                 break
             l -= 1
             n += 1
-
-#        for n,e in enumerate(STAGE_EM_POS):
-#            if self.Stage_Pos == e[0]:
-
-#                t = e[3]
-#                imp.Em.append(t(e[1], e[2], e[3], e[4], e[5]))
 
     #  ------------------------------------------
     def CheckColli(self, plat, embd):       # plat 攻撃側　　embd ダメージ側
@@ -536,11 +523,34 @@ class SceneGameClear:
             # メイン ゲームシーンのデリート
             App.SetMainScene(self,None)
             # サブScene タイトル　セット
-            App.SetSubScene(self,SceneTitle())
+            App.SetSubScene(self,SceneNextStage())
         
     def draw(self):
         # STAGE CLEAR
         pyxel.blt(self.PosX - (8 * 4),      self.PosY, 0, 8*8,  8*18, 8*8, 16, 0)
+
+# ==================================================
+# Scene 次のステージへ送る
+class SceneNextStage:
+    # 初期化---------------------------------------
+    def __init__(self):
+        imp.Game_Status = imp.GAME_STATUS_NEXTSTAGE       # 次のステージ
+
+    def __del__(self):
+        pass
+
+    # メイン---------------------------------------
+    def update(self):
+            # メインシーン ゲームメイン セット
+            imp.StageNo += 1
+
+            App.SetMainScene(self,SceneGameMain())
+
+            # サブシーン Start セット
+            App.SetSubScene(self,SceneStart())
+
+    def draw(self):
+        pass
 
 # ==================================================
 
