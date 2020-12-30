@@ -81,7 +81,7 @@ class EnemyNorm(imp.Sprite):
         y = self.PosY + self.PosAdjY
 
         if self.St1 == 0:
-            pyxel.blt(x, y, 0, 8, 8*9 , 8, 8, 0)
+            pyxel.blt(x, y, 0, 0, 56, 12, 12, 0)
         else:
             self.PtnTime -= 1
             if self.PtnTime <= 0:
@@ -96,7 +96,7 @@ class EnemyNorm(imp.Sprite):
                     if self.PtnNo < 0:
                         self.PtnNo = 7
 
-            pyxel.blt(x, y, 0, 8 * self.PtnNo, 8*9 , 8, 8, 0)
+            pyxel.blt(x, y, 0, 16 * self.PtnNo, 56, 12, 12, 0)
 
         # 中心の表示
         shooting_sub.DebugDrawPosHitRect(self)
@@ -110,9 +110,9 @@ class EnemyWide(imp.Sprite):
         imp.Sprite.__init__(self, imp.OBJEM, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
 
         self.PosAdjX = -8
-        self.PosAdjY = -4
+        self.PosAdjY = -5
         self.HitPoint = 1
-        self.HitRectX = 14
+        self.HitRectX = 16
         self.HitRectY = 6
         self.Score = 10
         if self.Id1 == 0:
@@ -211,11 +211,11 @@ class EnemyWide(imp.Sprite):
 
         if self.Id1 != 3:
             if self.St0 == 0:
-                pyxel.blt(x, y, 0, 0, 8*8 , 16, 8, 0)
+                pyxel.blt(x, y, 0, 0, 40, 32, 10, 0)
             else:
-                pyxel.blt(x, y, 0, 0, 8*8 , 16,-8, 0)
+                pyxel.blt(x, y, 0, 0, 40, 32,-10, 0)
         else:
-            pyxel.blt(x, y, 0, 0, 8*8 , 16, 8, 0)
+            pyxel.blt(x, y, 0, 0, 40 , 32, 10, 0)
 
         # 中心の表示
         shooting_sub.DebugDrawPosHitRect(self)
@@ -411,18 +411,18 @@ class EnemyBullet(imp.Sprite):
 
         self.Life = 1
         self.HitPoint = 1
-        self.HitRectX = 2
-        self.HitRectY = 2
+        self.HitRectX = 3
+        self.HitRectY = 3
 
         if self.Id0 == 0:           # 〇弾 狙って撃つ
-            self.PosAdjX = -2
-            self.PosAdjY = -2
+            self.PosAdjX = -3
+            self.PosAdjY = -3
         elif self.Id0 == 1:         # 線弾 指定の方向
             self.PosAdjX = -4
             self.PosAdjY = -4
         elif self.Id0 == 2:         # 〇弾 指定の方向
-            self.PosAdjX = -2
-            self.PosAdjY = -2
+            self.PosAdjX = -3
+            self.PosAdjY = -3
         elif self.Id0 == 3:         # ボス弾大 前
             self.PosAdjX = -4
             self.PosAdjY = -8
@@ -477,9 +477,10 @@ class EnemyBullet(imp.Sprite):
         y = self.PosY + self.PosAdjY
         if self.Id0 == 0:
             if pyxel.frame_count & 0x08:
-                pyxel.blt(x, y, 0, 28, 0, 4, 4, 0)
+                pyxel.blt(x, y, 0, 16, 16, 6, 6, 0)
             else:
-                pyxel.blt(x, y, 0, 28, 0, 4, 4, 0)
+                pyxel.blt(x, y, 0, 24, 16, 6, 6, 0)
+
         elif self.Id0 == 1:
             if self.Id1 == 0:
                 pyxel.blt(x, y, 0, 8*0, 8*4, 8, 8, 0)
@@ -547,9 +548,9 @@ class EnemyBullet(imp.Sprite):
                 pyxel.blt(x, y, 0, 8*1, 8*4, 8, -8, 0)
         elif self.Id0 == 2:
             if pyxel.frame_count & 0x08:
-                pyxel.blt(x, y, 0, 28, 0, 4, 4, 0)
+                pyxel.blt(x, y, 0, 16, 16, 6, 6, 0)
             else:
-                pyxel.blt(x, y, 0, 28, 0, 4, 4, 0)
+                pyxel.blt(x, y, 0, 24, 16, 6, 6, 0)
         elif self.Id0 == 3:
             if pyxel.frame_count & 0x04:
                 pyxel.blt(x, y, 0, 0, 8*15, 8, 16, 0)

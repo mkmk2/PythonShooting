@@ -1,5 +1,5 @@
 
-_DEBUG_ = True
+_DEBUG_ = False
 
 WINDOW_W = 255
 WINDOW_H = 240
@@ -65,6 +65,10 @@ STAGE_NO_MAX = 4       # 最終ステージ
 
 # 敵セットTbl
 StageSetTbl = ""
+
+# プレイや０
+PlItemNum = 0     # アイテム取得数
+PlLevel = 0       # レベル
 
 # --------------------------------------------------
 # スプライト表示の共通クラス

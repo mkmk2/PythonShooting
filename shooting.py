@@ -352,7 +352,7 @@ class SceneGameMain:
                 if p.ObjType == imp.OBJPL:
                     # Itemゲージ
                     for n in range(5):
-                        if n >= p.ItemNum:
+                        if n >= imp.PlItemNum:
                             pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
                         else:
                             pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
@@ -445,7 +445,7 @@ class SceneGameMain:
             
             if imp._DEBUG_ == True:
                 print("item")
-            p.ItemNum += 1              # 1個とる
+            imp.PlItemNum += 1          # 1個とる
             return True                 # 当たり
 
         return False                    # 外れ

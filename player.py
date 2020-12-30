@@ -20,8 +20,6 @@ PLST_CLEAR = 4
 class Player(imp.Sprite):
 
     ShotTime = 0
-    ItemNum = 0     # アイテム取得数
-    Level = 0
 
     # コンストラクタ
     def __init__(self, x, y, id0, id1, item):
@@ -32,12 +30,12 @@ class Player(imp.Sprite):
 
         self.PosX = 128
         self.PosY = 250
-        self.PosAdjX = -4
+        self.PosAdjX = -8
         self.PosAdjY = -8
 
         self.Life = 5
-        self.HitRectX = 2
-        self.HitRectY = 2
+        self.HitRectX = 4
+        self.HitRectY = 4
 
     def __del__(self):
         pass
@@ -79,9 +77,9 @@ class Player(imp.Sprite):
                     self.ShotTime -= 1
                     if self.ShotTime < 0:
                         self.ShotTime = 5
-                        if self.Level == 0:
+                        if imp.PlLevel == 0:
                             imp.Pl.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
-                        elif self.Level == 1:
+                        elif imp.PlLevel == 1:
                             imp.Pl.append(PlayerBullet(self.PosX - 5, self.PosY, 0, 0, 0))
                             imp.Pl.append(PlayerBullet(self.PosX + 5, self.PosY, 0, 0, 0))
                         else:
@@ -92,9 +90,9 @@ class Player(imp.Sprite):
                 else:
                     self.ShotTime = 0
 
-                if self.ItemNum >= 5:
-                    self.ItemNum = 0
-                    self.Level += 1
+                if imp.PlItemNum >= 5:
+                    imp.PlItemNum = 0
+                    imp.PlLevel += 1
 
         elif self.PlSt0 == PLST_DAMAGE:           # ダメージ
             self.HitSt = 1                          # 当たりナシ
@@ -149,11 +147,11 @@ class Player(imp.Sprite):
         y = self.PosY + self.PosAdjY
         
         if self.PlDir == 0:
-            pyxel.blt(x, y, 0, 0, 0, 8 ,16, 0)       # 前
+            pyxel.blt(x, y, 0, 16, 0, 16 ,16, 0)      # 前
         elif self.PlDir == 1:
-            pyxel.blt(x, y, 0, 8, 0, 8 ,16, 0)       # 左
+            pyxel.blt(x, y, 0,  0, 0, 16 ,16, 0)      # 左
         else:
-            pyxel.blt(x, y, 0, 16, 0, 8 ,16, 0)      # 右
+            pyxel.blt(x, y, 0, 32, 0, 16 ,16, 0)      # 右
 
         # 中心の表示
         shooting_sub.DebugDrawPosHitRect(self)
@@ -200,12 +198,12 @@ class PlayerBullet(imp.Sprite):
     def __init__(self, x, y, id0, id1, item):
         imp.Sprite.__init__(self, imp.OBJPLB, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
 
-        self.PosAdjX = -1
-        self.PosAdjY = -2
+        self.PosAdjX = -3
+        self.PosAdjY = -3
         self.Life = 1
         self.HitPoint = 1
-        self.HitRectX = 1
-        self.HitRectY = 5
+        self.HitRectX = 2
+        self.HitRectY = 3
 
         if self.Id0 == 0:   # 前
             self.VectorX = 0
@@ -229,7 +227,7 @@ class PlayerBullet(imp.Sprite):
     def draw(self):
         x = self.PosX + self.PosAdjX
         y = self.PosY + self.PosAdjY
-        pyxel.blt(x, y, 0, 32, 0, 2 ,4, 0)
+        pyxel.blt(x, y, 0, 0, 16, 6, 6, 0)
 
         # 中心の表示
         shooting_sub.DebugDrawPosHitRect(self)
