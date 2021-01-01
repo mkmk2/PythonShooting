@@ -84,7 +84,7 @@ class EnemyNorm(imp.Sprite):
         else:
             self.PtnTime -= 1
             if self.PtnTime <= 0:
-                self.PtnTime = 8
+                self.PtnTime = 7
 
                 if self.St1 == 1:
                     self.PtnNo += 1

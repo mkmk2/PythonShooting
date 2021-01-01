@@ -43,7 +43,8 @@ class Star:
     # 描画
     def draw(self):
         for s in StarData:
-            pyxel.pset(s.PosX, s.PosY, 7)
+            if pyxel.pget(s.PosX, s.PosY) == 0:
+                pyxel.pset(s.PosX, s.PosY, 7)
 
 # --------------------------------------------------
 
