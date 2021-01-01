@@ -221,6 +221,83 @@ class EnemyWide(imp.Sprite):
         shooting_sub.DebugDrawPosHitRect(self)
 
 # ==================================================
+# 敵ミサイルクラス
+class EnemyMiss(imp.Sprite):
+
+    # コンストラクタ
+    def __init__(self, x, y, id0, id1, item):
+        imp.Sprite.__init__(self, imp.OBJEM, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
+
+        self.PosAdjX = -8
+        self.PosAdjY = -8
+        self.HitPoint = 10
+        self.HitRectX = 16
+        self.HitRectY = 8
+        self.Score = 10
+
+    # メイン
+    def update(self):
+        if self.St0 == 0:
+            self.PosY += 1.5
+            if self.PosY > 130:
+                imp.Em.append(EnemyBullet(self.PosX - 10,self.PosY,4,0,0))
+                imp.Em.append(EnemyBullet(self.PosX + 10,self.PosY,4,0,0))
+                self.St0 = 1
+                self.St2 = 80   #炎の表示タイマー
+        else:
+            self.PosY -= 0.5
+            if self.St2 > 0:
+                self.St2 -= 1
+
+        # -----------------------------------------------
+        # 死にチェック
+        if self.Life <= 0:          # 0以下なら死ぬ
+            self.Death = 1          # 死ぬ
+            imp.Score += self.Score     # Scoreを加算
+            if imp._DEBUG_ == True:
+                print("enemy die")
+            # アイテムセット
+            if self.ItemSet != 0:
+                if imp._DEBUG_ == True:
+                    print("item")
+                imp.Itm.append(plitem.PlItem(self.PosX,self.PosY,0,0,0))
+
+        # 画面内チェック
+        imp.CheckScreenIn(self)
+
+        # -----------------------------------------------
+    def draw(self):
+        x = self.PosX + self.PosAdjX
+        y = self.PosY + self.PosAdjY
+
+        pyxel.blt(x, y, 0, 0, 72, 16, 16, 0)
+
+        # ミサイル
+        if self.St0 == 0:
+            # ミサイル発射までは表示
+            x = self.PosX - 10 - 4
+            y = self.PosY - 8
+            pyxel.blt(x, y, 0, 16, 72, 8, 16, 0)
+
+            x = self.PosX + 10 - 4
+            y = self.PosY - 8
+            pyxel.blt(x, y, 0, 16, 72, 8, 16, 0)
+        else:
+            # 発射後の炎
+            if self.St2 > 0:
+                if pyxel.frame_count & 0x04:
+                    pyxel.blt(self.PosX + 6, self.PosY + 4, 0, 32, 72, 8, 8, 0)
+
+                    pyxel.blt(self.PosX - 14, self.PosY + 4, 0, 32, 72, -8, 8, 0)
+                else:
+                    pyxel.blt(self.PosX + 6, self.PosY + 4, 0, 32, 80, 8, 8, 0)
+
+                    pyxel.blt(self.PosX - 14, self.PosY + 4, 0, 32, 80, -8, 8, 0)
+
+        # 中心の表示
+        shooting_sub.DebugDrawPosHitRect(self)
+
+# ==================================================
 EMBOSS_ENTER = 0    # 登場
 EMBOSS_AT_BO = 1    # BOSS連射
 EMBOSS_MOVE = 2     # 移動
@@ -430,6 +507,13 @@ class EnemyBullet(imp.Sprite):
             self.VectorY = 1.8
             self.HitRectX = 4
             self.HitRectY = 4
+        elif self.Id0 == 4:         # ミサイル
+            self.PosAdjX = -4
+            self.PosAdjY = -8
+            self.VectorX = 0
+            self.VectorY = 2.0
+            self.HitRectX = 4
+            self.HitRectY = 8
 
     # メイン
     def update(self):
@@ -461,6 +545,10 @@ class EnemyBullet(imp.Sprite):
                 self.PosY += self.VectorY
 
         elif self.Id0 == 3:         # ボス弾大 前
+            self.PosX += self.VectorX
+            self.PosY += self.VectorY
+
+        elif self.Id0 == 4:         # ミサイル
             self.PosX += self.VectorX
             self.PosY += self.VectorY
 
@@ -556,6 +644,13 @@ class EnemyBullet(imp.Sprite):
                 pyxel.blt(x, y, 0, 0, 8*15, 8, 16, 0)
             else:
                 pyxel.blt(x, y, 0, 8, 8*15, 8, 16, 0)
+
+        elif self.Id0 == 4:         # ミサイル
+            pyxel.blt(x, y, 0, 16, 72, 8, 16, 0)
+            if pyxel.frame_count & 0x04:
+                pyxel.blt(x, y-8, 0, 24, 72, 8, 8, 0)
+            else:
+                pyxel.blt(x, y-8, 0, 24, 80, 8, 8, 0)
 
         # 中心の表示
         shooting_sub.DebugDrawPosHitRect(self)
