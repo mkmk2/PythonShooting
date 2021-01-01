@@ -38,6 +38,8 @@ EFF_BOOM_MOVE = 1
 MainScene = None
 SubScene = None             # NextSubScene から SubScene へ入れるときにインスタンス化する、SubScnenに何か入ってたらdelしてから入れる
 
+StarScene = None
+
 # プレイヤー・プレイヤーの弾オブジェクト
 Pl = []
 

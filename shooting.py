@@ -7,6 +7,7 @@ import enemy
 import effect
 import plitem
 import enemy_set
+import star
 
 # ==================================================
 class App:
@@ -21,6 +22,8 @@ class App:
     imp.MainScnene = None
     # サブシーン
     imp.SubScnene = None
+    # スターシーン
+    imp.StarScnene = None
 
     # 初期化---------------------------------------
     def __init__(self):
@@ -30,6 +33,8 @@ class App:
         # メインScene タイトル　セット
         self.SetSubScene(SceneTitle())
 
+        imp.StarScene = star.Star()
+        
         pyxel.run(self.update, self.draw)
 
     # メイン---------------------------------------
@@ -45,6 +50,9 @@ class App:
         # サブシーン
         if imp.SubScene != None:
             imp.SubScene.update()
+
+        # スター
+        imp.StarScene.update()
 
 #                    print(n)
 
@@ -313,6 +321,8 @@ class SceneGameMain:
             if imp.TilePosY > 0:
                 imp.TilePosY = 0
 
+        # スター
+        imp.StarScene.draw()
 
         if imp.Game_Status == imp.GAME_STATUS_MAIN or imp.Game_Status == imp.GAME_STATUS_GAMEOVER or imp.Game_Status == imp.GAME_STATUS_STAGECLEAR:
             # プレイヤー
@@ -571,7 +581,6 @@ class SceneNextStage:
     def draw(self):
         pass
 
-# ==================================================
 
 App()
 

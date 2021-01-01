@@ -2,7 +2,6 @@ import pyxel
 import random
 import math
 import imp
-import random
 import shooting_sub
 import plitem
 import effect
