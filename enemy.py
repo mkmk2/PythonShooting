@@ -22,8 +22,8 @@ class EnemyNorm(imp.Sprite):
     def __init__(self, x, y, id0, id1, item):
         imp.Sprite.__init__(self, imp.OBJEM, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
 
-        self.PosAdjX = -4
-        self.PosAdjY = -4
+        self.PosAdjX = -6
+        self.PosAdjY = -6
         self.HitPoint = 1
         self.HitRectX = 8
         self.HitRectY = 8
@@ -101,7 +101,7 @@ class EnemyNorm(imp.Sprite):
                 pyxel.blt(x, y, 0, 16 * self.PtnNo, 56, 12, 12, 0)
 
         elif self.Id0 == 1:
-            if pyxel.frame_count & 0x10:
+            if pyxel.frame_count & 0x08:
                 pyxel.blt(x, y, 0, 40, 72, 12, 12, 0)
             else:
                 pyxel.blt(x, y, 0, 56, 72, 12, 12, 0)

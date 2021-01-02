@@ -33,7 +33,7 @@ class Player(imp.Sprite):
         self.PosAdjX = -8
         self.PosAdjY = -8
 
-        self.Life = 5
+        self.Life = 3
         self.HitRectX = 4
         self.HitRectY = 4
 

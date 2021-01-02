@@ -1,4 +1,5 @@
 
+#_DEBUG_ = True
 _DEBUG_ = False
 
 WINDOW_W = 255

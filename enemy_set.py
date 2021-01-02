@@ -8,60 +8,61 @@ STAGE_SET_1 = [
     # 時間, X, Y, class, id0, id1, item
     # まっすぐ
     [ 120,  128-30,   0,  enemy.EnemyNorm,  1, 0, 0,],
-    [ 120,  128-60,   0,  enemy.EnemyNorm,  1, 0, 0,],
+    [   0,  128-60,   0,  enemy.EnemyNorm,  1, 0, 0,],
 
-    [ 240,  128+30,   0,  enemy.EnemyNorm,  1, 0, 0,],
-    [ 240,  128+60,   0,  enemy.EnemyNorm,  1, 0, 0,],
+    [ 120,  128+30,   0,  enemy.EnemyNorm,  1, 0, 0,],
+    [   0,  128+60,   0,  enemy.EnemyNorm,  1, 0, 0,],
 
-    [ 340,  128-30,   0,  enemy.EnemyNorm,  1, 0, 0,],
-    [ 340,  128+30,   0,  enemy.EnemyNorm,  1, 0, 0,],
-    [ 360,  128-60,   0,  enemy.EnemyNorm,  1, 0, 0,],
-    [ 360,  128+60,   0,  enemy.EnemyNorm,  1, 0, 0,],
-    [ 380,  128-80,   0,  enemy.EnemyNorm,  1, 0, 0,],
-    [ 380,  128+80,   0,  enemy.EnemyNorm,  1, 0, 0,],
+    [ 220,  128-30,   0,  enemy.EnemyNorm,  1, 0, 0,],
+    [   0,  128+30,   0,  enemy.EnemyNorm,  1, 0, 0,],
+    [  20,  128-60,   0,  enemy.EnemyNorm,  1, 0, 0,],
+    [   0,  128+60,   0,  enemy.EnemyNorm,  1, 0, 0,],
+    [  20,  128-80,   0,  enemy.EnemyNorm,  1, 0, 0,],
+    [   0,  128+80,   0,  enemy.EnemyNorm,  1, 0, 0,],
 
     # カーブ
-    [ 500,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [ 530,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [ 560,  128-40,   0,  enemy.EnemyNorm,  0, 0, 1,],
+    [ 120,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  30,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  30,  128-40,   0,  enemy.EnemyNorm,  0, 0, 1,],
 
-    [ 660,  128+40,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [ 690,  128+40,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [ 710,  128+40,   0,  enemy.EnemyNorm,  0, 0, 1,],
+    [ 100,  128+40,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  30,  128+40,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  20,  128+40,   0,  enemy.EnemyNorm,  0, 0, 1,],
 
     #ワイド
-    [ 900,  128-60,   0,  enemy.EnemyWide,  0, 0, 0,],
-    [ 930,  128-20,   0,  enemy.EnemyWide,  0, 0, 0,],
-    [ 960,  128+60,   0,  enemy.EnemyWide,  0, 0, 0,],
-    [ 990,  128+20,   0,  enemy.EnemyWide,  0, 0, 0,],
+    [ 190,  128-60,   0,  enemy.EnemyWide,  0, 0, 0,],
+    [  30,  128-20,   0,  enemy.EnemyWide,  0, 0, 0,],
+    [  30,  128+60,   0,  enemy.EnemyWide,  0, 0, 0,],
+    [  30,  128+20,   0,  enemy.EnemyWide,  0, 0, 0,],
 
     # カーブ
-    [1000,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1030,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1060,  128+40,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1090,  128-80,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1120,  128+80,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1150,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1180,  128+00,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1210,  128+80,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1240,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1260,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1290,  128+30,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1310,  128+50,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1320,  128-20,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
-    [1340,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1360,  128-60,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [1370,  128+20,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
-    [1430,  128-40,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
-    [1500,  128+40,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
+    [  10,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  20,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  30,  128+40,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  30,  128-80,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  30,  128+80,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  30,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  30,  128+00,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  30,  128+80,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  30,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  20,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  30,  128+30,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  20,  128+50,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  10,  128-20,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
+    [  20,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  20,  128-60,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  10,  128+20,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
+    [  40,  128-40,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
+    [  60,  128+40,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
 
 
-    [3500,  128,      0,  enemy.EnemyBoss,  0, 0, 0,],    # Boss
+    [1000,  128,      0,  enemy.EnemyBoss,  0, 0, 0,],    # Boss
+
+
 ]
 
 STAGE_SET_2 = [
     # 時間, X, Y, class, id0, id1, item
-
     [ 200,  128-60,   0,  enemy.EnemyWide,  0, 0, 0,],    # まっすぐ
     [ 240,  128-60,   0,  enemy.EnemyWide,  0, 0, 0,],
     [ 280,  128-60,   0,  enemy.EnemyWide,  0, 0, 1,],

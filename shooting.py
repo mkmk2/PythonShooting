@@ -367,11 +367,15 @@ class SceneGameMain:
                         else:
                             pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
                     # Lifeゲージ
-                    for n in range(5):
+                    for n in range(3):
                         if n >= p.Life:
                             pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 1, 8, 8, 0)  # 空
                         else:
                             pyxel.blt(10 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 7, 8 * 2, 8, 8, 0)  # とった分
+            # スクロールPos
+            if imp._DEBUG_ == True:
+                pos = "{:5}".format(self.Stage_Pos)
+                pyxel.text(220, 200, pos, 7)
 
 
     #  ------------------------------------------
@@ -379,16 +383,19 @@ class SceneGameMain:
         # ステージの位置から敵をセットする
         l = len(imp.StageSetTbl)                # ステージTbl数
         n = 0                                   # 頭からの順番
+        pos = 0
 
         while l > 0:
             e = imp.StageSetTbl[n]
-            if self.Stage_Pos == e[0]:          # 等しい時のみ敵セットする
-                while self.Stage_Pos == e[0]:   # 同じPosを繰り返しセット
+            pos += e[0]
+            if self.Stage_Pos == pos:          # 等しい時のみ敵セットする
+                while self.Stage_Pos == pos:   # 同じPosを繰り返しセット
                     t = e[3]
                     imp.Em.append(t(e[1], e[2], e[4], e[5], e[6]))
 
                     n += 1                      # 次のTblへ
                     e = imp.StageSetTbl[n]
+                    pos += e[0]
                 break
             l -= 1                              # 次のTblへ
             n += 1
