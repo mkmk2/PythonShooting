@@ -354,8 +354,8 @@ class SceneGameMain:
                 n.draw()
 
             # スコアの表示
-            sc = "{:04}".format(imp.Score)
-            pyxel.text(100, 10, sc, 7)
+            sc = "{:5}".format(imp.Score)
+            pyxel.text(220, 230, sc, 7)
 
             # ゲージ
             for p in imp.Pl:
@@ -377,16 +377,20 @@ class SceneGameMain:
     #  ------------------------------------------
     def SetStageEnemy(self):
         # ステージの位置から敵をセットする
-        l = len(imp.StageSetTbl)
-        n = 0
+        l = len(imp.StageSetTbl)                # ステージTbl数
+        n = 0                                   # 頭からの順番
 
         while l > 0:
             e = imp.StageSetTbl[n]
-            if self.Stage_Pos == e[0]:
-                t = e[3]
-                imp.Em.append(t(e[1], e[2], e[4], e[5], e[6]))
+            if self.Stage_Pos == e[0]:          # 等しい時のみ敵セットする
+                while self.Stage_Pos == e[0]:   # 同じPosを繰り返しセット
+                    t = e[3]
+                    imp.Em.append(t(e[1], e[2], e[4], e[5], e[6]))
+
+                    n += 1                      # 次のTblへ
+                    e = imp.StageSetTbl[n]
                 break
-            l -= 1
+            l -= 1                              # 次のTblへ
             n += 1
 
     #  ------------------------------------------

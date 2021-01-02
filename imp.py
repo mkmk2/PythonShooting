@@ -109,6 +109,8 @@ class Sprite:
         self.HitPoint = 0
         self.Hit = 0                    # 1:何かに当たった
 
+        self.TmpCtr = 0
+
 #  ------------------------------------------
 # 画面内チェック
 def CheckScreenIn(self):

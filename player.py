@@ -76,7 +76,7 @@ class Player(imp.Sprite):
                 if pyxel.btn(pyxel.KEY_SPACE) or pyxel.btn(pyxel.GAMEPAD_1_A) or pyxel.btn(pyxel.GAMEPAD_1_B):
                     self.ShotTime -= 1
                     if self.ShotTime < 0:
-                        self.ShotTime = 5
+                        self.ShotTime = 6
                         if imp.PlLevel == 0:
                             imp.Pl.append(PlayerBullet(self.PosX, self.PosY, 0, 0, 0))
                         elif imp.PlLevel == 1:

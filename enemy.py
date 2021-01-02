@@ -6,17 +6,11 @@ import shooting_sub
 import plitem
 import effect
 
-# Id0
-# 0: まっすぐ下に降りてきて画面真ん中あたりで
-#     Id1:0 弾撃って引き返す
-#     Id1:1 止まって3Wayx10
-# 1: まっすぐ下に降りてきてプレイヤーに向かってカーブ、画面真ん中あたりで弾撃つ
-# 2: まっすぐ下に移動するだけ
-
-
-
 # ==================================================
 # 敵Normクラス
+# Id0
+# 0: まっすぐ下に降りてきてプレイヤーに向かってカーブ、画面真ん中あたりで弾撃つ
+# 1: まっすぐ下に移動するだけ
 class EnemyNorm(imp.Sprite):
     BulletTime = 0
 
@@ -33,30 +27,38 @@ class EnemyNorm(imp.Sprite):
         self.HitPoint = 1
         self.HitRectX = 8
         self.HitRectY = 8
-        self.Score = 10
-        self.Life = 2
+        if self.Id0 == 0:
+            self.Score = 10
+            self.Life = 2
+        elif self.Id0 == 1:
+            self.Score = 10
+            self.Life = 1
 
         self.BulletTime = random.randrange(40, 60, 1)
 
     # メイン
     def update(self):
-        if self.St0 == 0:
-            self.PosY += 1.2
-            if self.PosY > 40:
-                pl = imp.GetPl(self)
-                if pl != 0:
-                    if self.PosX < pl.PosX:
-                        self.VectorX += 0.015
-                        self.St1 = 1    # 右回転
-                    else:
-                        self.VectorX -= 0.015
-                        self.St1 = 2    # 左回転
+        if self.Id0 == 0:           # カーブ
+            if self.St0 == 0:
+                self.PosY += 1.2
+                if self.PosY > 40:
+                    pl = imp.GetPl(self)
+                    if pl != 0:
+                        if self.PosX < pl.PosX:
+                            self.VectorX += 0.015
+                            self.St1 = 1    # 右回転
+                        else:
+                            self.VectorX -= 0.015
+                            self.St1 = 2    # 左回転
 
-        self.PosX += self.VectorX
+                self.PosX += self.VectorX
 
-        self.BulletTime -= 1
-        if self.BulletTime <= 0:
-            self.BulletTime = random.randrange(10, 20, 1)
+                self.BulletTime -= 1
+                if self.BulletTime <= 0:
+                    self.BulletTime = random.randrange(10, 20, 1)
+
+        elif self.Id0 == 1:         # まっすぐ
+            self.PosY += 0.9
 
         # -----------------------------------------------
         # 死にチェック
@@ -79,23 +81,30 @@ class EnemyNorm(imp.Sprite):
         x = self.PosX + self.PosAdjX
         y = self.PosY + self.PosAdjY
 
-        if self.St1 == 0:
-            pyxel.blt(x, y, 0, 0, 56, 12, 12, 0)
-        else:
-            self.PtnTime -= 1
-            if self.PtnTime <= 0:
-                self.PtnTime = 7
+        if self.Id0 == 0:
+            if self.St1 == 0:
+                pyxel.blt(x, y, 0, 0, 56, 12, 12, 0)
+            else:
+                self.PtnTime -= 1
+                if self.PtnTime <= 0:
+                    self.PtnTime = 7
 
-                if self.St1 == 1:
-                    self.PtnNo += 1
-                    if self.PtnNo >= 7:
-                        self.PtnNo = 0
-                else:
-                    self.PtnNo -= 1
-                    if self.PtnNo < 0:
-                        self.PtnNo = 7
+                    if self.St1 == 1:
+                        self.PtnNo += 1
+                        if self.PtnNo >= 7:
+                            self.PtnNo = 0
+                    else:
+                        self.PtnNo -= 1
+                        if self.PtnNo < 0:
+                            self.PtnNo = 7
 
-            pyxel.blt(x, y, 0, 16 * self.PtnNo, 56, 12, 12, 0)
+                pyxel.blt(x, y, 0, 16 * self.PtnNo, 56, 12, 12, 0)
+
+        elif self.Id0 == 1:
+            if pyxel.frame_count & 0x10:
+                pyxel.blt(x, y, 0, 40, 72, 12, 12, 0)
+            else:
+                pyxel.blt(x, y, 0, 56, 72, 12, 12, 0)
 
         # 中心の表示
         shooting_sub.DebugDrawPosHitRect(self)
@@ -129,16 +138,22 @@ class EnemyWide(imp.Sprite):
             # 止まって弾撃って引き返す
             if self.St0 == 0:
                 self.PosY += 1.5
-                if self.PosY > 130:
-                    imp.Em.append(EnemyBullet(self.PosX,self.PosY,0,0,0))
+                if self.PosY > 100:
+                    self.TmpCtr = 30        # ちょっと待つ
                     self.St0 = 1
+            elif self.St0 == 1:
+                self.TmpCtr -= 1
+                if self.TmpCtr <= 0:
+                    imp.Em.append(EnemyBullet(self.PosX,self.PosY,0,0,0))
+                    self.St0 = 2
             else:
                 self.PosY -= 1.5
+
         elif self.Id1 == 1:
             #止まって3Way
             if self.St0 == 0:
                 self.PosY += 1.5
-                if self.PosY > 130:
+                if self.PosY > 100:
                     self.BulletTime = 0
                     self.MvWait = 0
                     self.St0 = 1
@@ -209,7 +224,7 @@ class EnemyWide(imp.Sprite):
         y = self.PosY + self.PosAdjY
 
         if self.Id1 != 3:
-            if self.St0 == 0:
+            if self.St0 <= 1:
                 pyxel.blt(x, y, 0, 0, 40, 32, 10, 0)
             else:
                 pyxel.blt(x, y, 0, 0, 40, 32,-10, 0)
@@ -238,15 +253,20 @@ class EnemyMiss(imp.Sprite):
     def update(self):
         if self.St0 == 0:
             self.PosY += 1.5
-            if self.PosY > 130:
+            if self.PosY > 80:
                 imp.Em.append(EnemyBullet(self.PosX - 10,self.PosY,4,0,0))
                 imp.Em.append(EnemyBullet(self.PosX + 10,self.PosY,4,0,0))
+                self.TmpCtr = 30        # ちょっと待つ
                 self.St0 = 1
-                self.St2 = 80   #炎の表示タイマー
+        elif self.St0 == 1:
+            self.TmpCtr -= 1
+            if self.TmpCtr <= 0:
+                self.TmpCtr = 40        # 炎の表示タイマー
+                self.St0 = 2
         else:
+            if self.TmpCtr > 0:
+                self.TmpCtr -= 1
             self.PosY -= 0.5
-            if self.St2 > 0:
-                self.St2 -= 1
 
         # -----------------------------------------------
         # 死にチェック
@@ -281,9 +301,9 @@ class EnemyMiss(imp.Sprite):
             x = self.PosX + 10 - 4
             y = self.PosY - 8
             pyxel.blt(x, y, 0, 16, 72, 8, 16, 0)
-        else:
-            # 発射後の炎
-            if self.St2 > 0:
+        elif self.St0 == 2:
+        # 発射後の炎
+            if self.TmpCtr > 0:
                 if pyxel.frame_count & 0x04:
                     pyxel.blt(self.PosX + 6, self.PosY + 4, 0, 32, 72, 8, 8, 0)
 
