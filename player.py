@@ -161,29 +161,54 @@ class Player(imp.Sprite):
     def PlayerLeverMove(self):
         # プレイヤー移動
         self.PlDir = 0                       # 前
-        # 上移動(上カーソルキー)
-        if pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.GAMEPAD_1_UP):
-            self.PosY -= PL_SPEED
+        self.VectorX = 0
+        self.VectorY = 0
+
+        if pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.KEY_LEFT)\
+            or pyxel.btn(pyxel.GAMEPAD_1_UP) or pyxel.btn(pyxel.GAMEPAD_1_DOWN) or pyxel.btn(pyxel.GAMEPAD_1_RIGHT) or pyxel.btn(pyxel.GAMEPAD_1_LEFT):
+
+            # 上右
+            if (pyxel.btn(pyxel.KEY_UP) and pyxel.btn(pyxel.KEY_RIGHT)) or (pyxel.btn(pyxel.GAMEPAD_1_UP) and pyxel.btn(pyxel.GAMEPAD_1_RIGHT)):
+                d = 315
+                self.PlDir = 2                   # 右
+            # 上左
+            elif (pyxel.btn(pyxel.KEY_UP) and pyxel.btn(pyxel.KEY_LEFT)) or (pyxel.btn(pyxel.GAMEPAD_1_UP) and pyxel.btn(pyxel.GAMEPAD_1_LEFT)):
+                d = 225
+                self.PlDir = 1                   # 左
+            # 下右
+            elif (pyxel.btn(pyxel.KEY_DOWN) and pyxel.btn(pyxel.KEY_RIGHT)) or (pyxel.btn(pyxel.GAMEPAD_1_DOWN) and pyxel.btn(pyxel.GAMEPAD_1_RIGHT)):
+                d = 45
+                self.PlDir = 2                   # 右
+            # 下左
+            elif (pyxel.btn(pyxel.KEY_DOWN) and pyxel.btn(pyxel.KEY_LEFT)) or (pyxel.btn(pyxel.GAMEPAD_1_DOWN) and pyxel.btn(pyxel.GAMEPAD_1_LEFT)):
+                d = 135
+                self.PlDir = 1                   # 左
+            else:
+                # 上移動(上カーソルキー)
+                if pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.GAMEPAD_1_UP):
+                    d = 270
+                # 下移動(下カーソルキー)
+                elif pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.GAMEPAD_1_DOWN):
+                    d = 90
+                # 右移動(右カーソルキー)
+                elif pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.GAMEPAD_1_RIGHT):
+                    d = 0
+                    self.PlDir = 2                   # 右
+                # 左移動(左カーソルキー)
+                elif pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.GAMEPAD_1_LEFT):
+                    d = 180
+                    self.PlDir = 1                   # 左
+
+            shooting_sub.SetVector(self, math.radians(d), PL_SPEED)
+            self.PosX += self.VectorX
+            self.PosY += self.VectorY
+
             if self.PosY < 50:
                 self.PosY = 50
-
-        # 下移動(下カーソルキー)
-        if pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.GAMEPAD_1_DOWN):
-            self.PosY += PL_SPEED
             if self.PosY > imp.WINDOW_H - 16:
                 self.PosY = imp.WINDOW_H - 16
-
-        # 右移動(右カーソルキー)
-        if pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.GAMEPAD_1_RIGHT):
-            self.PosX += PL_SPEED
-            self.PlDir = 2                   # 右
             if self.PosX > imp.WINDOW_W - 8:
                 self.PosX = imp.WINDOW_W - 8
-
-        # 左移動(左カーソルキー)
-        if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.GAMEPAD_1_LEFT):
-            self.PosX -= PL_SPEED
-            self.PlDir = 1                   # 左
             if self.PosX < 8:
                 self.PosX = 8
 
