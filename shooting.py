@@ -154,8 +154,8 @@ class SceneTitle:
         # タイトル画面
         pyxel.bltm(0, 0, 0, 8 * 9, 0, 32, 30)
 
-        ti = "TITLE"
-        pyxel.text(100, 100, ti, 7)
+#        ti = "TITLE"
+#        pyxel.text(100, 100, ti, 7)
 
         st = ">"
         pyxel.text(100-10, 180 + (self.SelectPos * 10), st, 7)

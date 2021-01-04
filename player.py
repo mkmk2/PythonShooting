@@ -148,10 +148,25 @@ class Player(imp.Sprite):
         
         if self.PlDir == 0:
             pyxel.blt(x, y, 0, 16, 0, 16 ,16, 0)      # 前
-        elif self.PlDir == 1:
-            pyxel.blt(x, y, 0,  0, 0, 16 ,16, 0)      # 左
+
+            if pyxel.frame_count & 0x04:
+                pyxel.blt(self.PosX + 0, self.PosY + 8, 0, 8, 16, 6, 6, 0)
+                pyxel.blt(self.PosX - 6, self.PosY + 8, 0, 8, 16, -6, 6, 0)
+            else:
+                pyxel.blt(self.PosX + 0, self.PosY + 8, 0, 8, 24, 6, 6, 0)
+                pyxel.blt(self.PosX - 6, self.PosY + 8, 0, 8, 24, -6, 6, 0)
         else:
-            pyxel.blt(x, y, 0, 32, 0, 16 ,16, 0)      # 右
+            if self.PlDir == 1:
+                pyxel.blt(x, y, 0,  0, 0, 16 ,16, 0)      # 左
+            else:
+                pyxel.blt(x, y, 0, 32, 0, 16 ,16, 0)      # 右
+
+            if pyxel.frame_count & 0x04:
+                pyxel.blt(self.PosX - 1, self.PosY + 8, 0, 8, 16, 6, 6, 0)
+                pyxel.blt(self.PosX - 5, self.PosY + 8, 0, 8, 16, -6, 6, 0)
+            else:
+                pyxel.blt(self.PosX - 1, self.PosY + 8, 0, 8, 24, 6, 6, 0)
+                pyxel.blt(self.PosX - 5, self.PosY + 8, 0, 8, 24, -6, 6, 0)
 
         # 中心の表示
         shooting_sub.DebugDrawPosHitRect(self)
