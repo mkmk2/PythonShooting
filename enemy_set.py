@@ -38,22 +38,22 @@ STAGE_SET_1 = [
     # カーブ
     [  10,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],
     [  20,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [  30,  128+40,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  40,  128+40,   0,  enemy.EnemyNorm,  0, 0, 0,],
     [  30,  128-80,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [  30,  128+80,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  40,  128+80,   0,  enemy.EnemyNorm,  0, 0, 0,],
     [  30,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [  30,  128+00,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  60,  128+00,   0,  enemy.EnemyNorm,  0, 0, 0,],
     [  30,  128+80,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [  30,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  50,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],
     [  20,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [  30,  128+30,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  60,  128+30,   0,  enemy.EnemyNorm,  0, 0, 0,],
     [  20,  128+50,   0,  enemy.EnemyNorm,  0, 0, 0,],
     [  10,  128-20,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
-    [  20,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [  20,  128-60,   0,  enemy.EnemyNorm,  0, 0, 0,],
-    [  10,  128+20,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
-    [  40,  128-40,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
-    [  60,  128+40,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
+    [  80,  128-20,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [ 100,  128-60,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [ 140,  128+20,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
+    [ 180,  128-40,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
+    [ 200,  128+40,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
 
 
     [1000,  128,      0,  enemy.EnemyBoss,  0, 0, 0,],    # Boss
