@@ -90,9 +90,10 @@ class Player(imp.Sprite):
                 else:
                     self.ShotTime = 0
 
-                if imp.PlItemNum >= 5:
+                if imp.PlItemNum >= imp.PL_ITEM_LEVEL_UP:
                     imp.PlItemNum = 0
                     imp.PlLevel += 1
+                    imp.PlLevelUpEff = 40      # 点滅時間
 
         elif self.PlSt0 == PLST_DAMAGE:           # ダメージ
             self.HitSt = 1                          # 当たりナシ

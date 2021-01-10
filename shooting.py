@@ -142,9 +142,12 @@ class SceneTitle:
             if self.SelectPos == 1:
                 imp.StageNo += 10               # テストステージは+10
 
-            imp.Score = 0                  # スコア
             
             # メインシーン ゲームメイン セット
+            imp.PlItemNum = 0     # アイテム取得数
+            imp.PlLevel = 0       # レベル
+            imp.PlLevelUpEff = 0
+
             App.SetMainScene(self,SceneGameMain())
 
             # サブシーン Start セット
@@ -361,11 +364,19 @@ class SceneGameMain:
             for p in imp.Pl:
                 if p.ObjType == imp.OBJPL:
                     # Itemゲージ
-                    for n in range(5):
-                        if n >= imp.PlItemNum:
-                            pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
-                        else:
-                            pyxel.blt(100 + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
+                    if imp.PlLevelUpEff == 0:
+                        for n in range(imp.PL_ITEM_LEVEL_UP):
+                            if n >= imp.PlItemNum:
+                                pyxel.blt(((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 1, 8, 8, 0)  # 空
+                            else:
+                                pyxel.blt(((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
+                    else:
+                    # 点滅
+                        imp.PlLevelUpEff -= 1
+                        if pyxel.frame_count & 0x02:
+                            for n in range(imp.PL_ITEM_LEVEL_UP):
+                                pyxel.blt(((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
+
                     # Lifeゲージ
                     for n in range(3):
                         if n >= p.Life:
