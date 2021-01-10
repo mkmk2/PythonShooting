@@ -144,6 +144,7 @@ class SceneTitle:
 
             
             # メインシーン ゲームメイン セット
+            imp.Score = 0         # スコア
             imp.PlItemNum = 0     # アイテム取得数
             imp.PlLevel = 0       # レベル
             imp.PlLevelUpEff = 0
