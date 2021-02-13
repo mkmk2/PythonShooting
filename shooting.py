@@ -349,6 +349,7 @@ class SceneGameMain:
                 if e.ObjType == imp.OBJEMB:
                     e.draw()
 
+
             # エフェクト
             for n in imp.Eff:
                 n.draw()

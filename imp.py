@@ -1,6 +1,6 @@
 
-#_DEBUG_ = True
-_DEBUG_ = False
+_DEBUG_ = True
+#_DEBUG_ = False
 
 WINDOW_W = 255
 WINDOW_H = 240

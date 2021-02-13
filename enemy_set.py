@@ -88,6 +88,8 @@ STAGE_SET_1 = [
     [  20,  128+50,   0,  enemy.EnemyNorm,  0, 0, 0,],
     [  40,  128+80,   0,  enemy.EnemyNorm,  0, 0, 0,],
     [  50,  128-40,   0,  enemy.EnemyNorm,  0, 0, 0,],
+    [  10,  128-40,   0,  enemy.EnemyDir,   0, 0, 1,],    # 360 
+    [ 100,  128+40,   0,  enemy.EnemyDir,   0, 0, 1,],    # 360 
 
 
     [1000,  128,      0,  enemy.EnemyBoss,  0, 0, 0,],    # Boss
@@ -148,7 +150,7 @@ STAGE_SET_4 = [
 
 STAGE_SET_TEST = [
     # 時間, X, Y, class, id0, id1, item
-    [ 150,  128-40,   0,  enemy.EnemyMiss,  0, 0, 1,],    # ミサイル
+    [ 150,  128-40,   0,  enemy.EnemyDir,  0, 0, 1,],    # 
 #    [ 150,  128-40,   0,  enemy.EnemyWide,  0, 0, 1,],    # 撃ってもどる
 
     [ 500,  128,      0,  enemy.EnemyBoss,  0, 0, 0,],    # Boss

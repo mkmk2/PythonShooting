@@ -235,6 +235,100 @@ class EnemyWide(imp.Sprite):
         shooting_sub.DebugDrawPosHitRect(self)
 
 # ==================================================
+# 敵directionクラス
+class EnemyDir(imp.Sprite):
+
+    # コンストラクタ
+    def __init__(self, x, y, id0, id1, item):
+        imp.Sprite.__init__(self, imp.OBJEM, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
+
+        self.PosAdjX = -8
+        self.PosAdjY = -8
+        self.HitPoint = 1
+        self.HitRectX = 6
+        self.HitRectY = 6
+        self.Score = 10
+        self.Life = 20
+        self.VectorY = 1.5
+
+    # メイン
+    def update(self):
+        # 全方向撃って戻る
+        if self.St0 == 0:
+            self.PosY += self.VectorY
+            if self.PosY > 60:
+                self.St0 += 1
+
+        elif self.St0 == 1:
+            # 減速
+            self.PosY += self.VectorY
+            self.VectorY += -0.03
+            if self.VectorY <= 0.0:
+                self.VectorY = 0.0
+
+                self.TmpCtr = 40         # キャラ替え時間
+                self.St0 += 1
+
+        elif self.St0 == 2:
+            self.TmpCtr -= 1
+            if self.TmpCtr <= 0:
+                self.BulletTime = 0
+                self.TmpCtr = 0
+                self.MvWait = 0
+                self.St0 += 1
+
+        elif self.St0 == 3:
+            # 全方向発射
+            self.MvWait -= 1
+            if self.MvWait <= 0:
+                for n in range(32):
+                    imp.Em.append(EnemyBullet(self.PosX,self.PosY,1,n,0))
+                self.MvWait = 80
+                self.BulletTime += 1
+                if self.BulletTime >= 8:
+                    self.MvWait = 90
+                    self.St0 += 1
+
+        elif self.St0 == 4:
+            self.MvWait -= 1
+            if self.MvWait <= 0:
+                self.St0 += 1
+
+        elif self.St0 == 5:
+            self.PosY -= 0.6
+
+        # -----------------------------------------------
+        # 死にチェック
+        if self.Life <= 0:          # 0以下なら死ぬ
+            self.Death = 1          # 死ぬ
+            imp.Score += self.Score     # Scoreを加算
+            if imp._DEBUG_ == True:
+                print("enemy die")
+            # アイテムセット
+            if self.ItemSet != 0:
+                if imp._DEBUG_ == True:
+                    print("item")
+                imp.Itm.append(plitem.PlItem(self.PosX,self.PosY,0,0,0))
+
+        # 画面内チェック
+        imp.CheckScreenIn(self)
+
+        # -----------------------------------------------
+    def draw(self):
+        x = self.PosX + self.PosAdjX
+        y = self.PosY + self.PosAdjY
+
+        if self.TmpCtr == 0:
+            pyxel.blt(x, y, 0, 72, 72, 16, 16, 0)
+        else:
+            pyxel.blt(x, y, 0, 88, 72, 16, 16, 0)
+            self.TmpCtr -= 1
+
+        # 中心の表示
+        shooting_sub.DebugDrawPosHitRect(self)
+
+
+# ==================================================
 # 敵ミサイルクラス
 class EnemyMiss(imp.Sprite):
 
