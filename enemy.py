@@ -483,7 +483,7 @@ class EnemyItemGroup(imp.Sprite):
                             if self.Id1 == eg.Id1:
                                 find_group += 1         # 同じId1を見つけた、同じGroup
                                 if find_group >= 2:     # 2以上になったら > 1の時、自分自身も含んでいるため、2個目を発見したら、自分以外の同じGroupが居るということ
-                                    break:
+                                    break
 
                 if find_group == 1:
                     if imp._DEBUG_ == True:
