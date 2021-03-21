@@ -9,7 +9,7 @@ import effect
 # ==================================================
 # 敵Normクラス
 # Id0
-# 0: まっすぐ下に降りてきてプレイヤーに向かってカーブ、画面真ん中あたりで弾撃つ
+# 0: まっすぐ下に降りてきてプレイヤーに向かってカーブ
 # 1: まっすぐ下に移動するだけ
 class EnemyNorm(imp.Sprite):
     BulletTime = 0
@@ -34,7 +34,7 @@ class EnemyNorm(imp.Sprite):
             self.Score = 10
             self.Life = 1
 
-        self.BulletTime = random.randrange(40, 60, 1)
+#        self.BulletTime = random.randrange(30, 80, 1)
 
     # メイン
     def update(self):
@@ -53,9 +53,11 @@ class EnemyNorm(imp.Sprite):
 
                 self.PosX += self.VectorX
 
-                self.BulletTime -= 1
-                if self.BulletTime <= 0:
-                    self.BulletTime = random.randrange(10, 20, 1)
+#                self.BulletTime -= 1
+#                if self.BulletTime <= 0:
+#                    self.BulletTime = random.randrange(10, 20, 1)
+#                    self.BulletTime = 99999     # 1回しか打たない
+#                    imp.Em.append(EnemyBullet(self.PosX,self.PosY,0,0,0))
 
         elif self.Id0 == 1:         # まっすぐ
             self.PosY += 0.9
@@ -406,6 +408,120 @@ class EnemyMiss(imp.Sprite):
                     pyxel.blt(self.PosX + 6, self.PosY + 4, 0, 32, 80, 8, 8, 0)
 
                     pyxel.blt(self.PosX - 14, self.PosY + 4, 0, 32, 80, -8, 8, 0)
+
+        # 中心の表示
+        shooting_sub.DebugDrawPosHitRect(self)
+# ==================================================
+# 敵ItemGroupクラス
+# セットされたグループNoにより、全滅させた際にアイテムを落とす
+# Id0
+# 0: まっすぐ下に降りてきてプレイヤーに向かってカーブ
+# 1: まっすぐ下に移動するだけ
+# Id1
+# 任意のGroupId
+# 同じグループの敵は同じIdをセットする
+# 死んだときに同じIdの敵が居なければアイテムを落とす
+# 例：5機のグループをセットしたい時には、画面街などに同時にセットしなければならない
+# 同時に複数のグループをセットしようとするとき、それぞれ別のIdを設定しなければならない
+class EnemyItemGroup(imp.Sprite):
+    BulletTime = 0
+
+    MvTime = 0
+    MvWait = 0
+    BossMoveTblPtr = 0
+
+    # コンストラクタ
+    def __init__(self, x, y, id0, id1, item):
+        imp.Sprite.__init__(self, imp.OBJEM, x, y, id0, id1, item)       # Spriteクラスのコンストラクタ
+
+        self.PosAdjX = -6
+        self.PosAdjY = -6
+        self.HitPoint = 1
+        self.HitRectX = 8
+        self.HitRectY = 8
+        if self.Id0 == 0:
+            self.Score = 10
+            self.Life = 2
+        elif self.Id0 == 1:
+            self.Score = 10
+            self.Life = 1
+
+    # メイン
+    def update(self):
+        if self.Id0 == 0:           # カーブ
+            if self.St0 == 0:
+                self.PosY += 1.2
+                if self.PosY > 40:
+                    pl = imp.GetPl(self)
+                    if pl != 0:
+                        if self.PosX < pl.PosX:
+                            self.VectorX += 0.015
+                            self.St1 = 1    # 右回転
+                        else:
+                            self.VectorX -= 0.015
+                            self.St1 = 2    # 左回転
+
+                self.PosX += self.VectorX
+
+        elif self.Id0 == 1:         # まっすぐ
+            self.PosY += 0.9
+
+        # -----------------------------------------------
+        # 死にチェック
+        if self.Life <= 0:          # 0以下なら死ぬ
+            self.Death = 1          # 死ぬ
+            imp.Score += self.Score     # Scoreを加算
+            if imp._DEBUG_ == True:
+                print("enemy die")
+            # アイテムセット
+            if self.ItemSet != 0:
+                # GroupIdのチェック
+                find_group = 0
+                for eg in imp.Em:
+                    if eg.ObjType == imp.OBJEM:
+                        if eg.__class__.__name__ == "EnemyItemGroup":
+                            if self.Id1 == eg.Id1:
+                                find_group += 1         # 同じId1を見つけた、同じGroup
+                                if find_group >= 2:     # 2以上になったら > 1の時、自分自身も含んでいるため、2個目を発見したら、自分以外の同じGroupが居るということ
+                                    break:
+
+                if find_group == 1:
+                    if imp._DEBUG_ == True:
+                        print("item")
+                    imp.Itm.append(plitem.PlItem(self.PosX,self.PosY,0,0,0))
+
+        # 画面内チェック
+        imp.CheckScreenIn(self)
+
+        # -----------------------------------------------
+    def draw(self):
+        x = self.PosX + self.PosAdjX
+        y = self.PosY + self.PosAdjY
+
+        if self.Id0 == 0:
+            if self.St1 == 0:
+                pyxel.blt(x, y, 0, 0, 56, 12, 12, 0)
+            else:
+                self.PtnTime -= 1
+                if self.PtnTime <= 0:
+                    self.PtnTime = 7
+
+                    if self.St1 == 1:
+                        self.PtnNo += 1
+                        if self.PtnNo >= 7:
+                            self.PtnNo = 0
+                    else:
+                        self.PtnNo -= 1
+                        if self.PtnNo < 0:
+                            self.PtnNo = 7
+
+                pyxel.blt(x, y, 0, 16 * self.PtnNo, 56, 12, 12, 0)
+
+        elif self.Id0 == 1:
+            if pyxel.frame_count & 0x08:
+                pyxel.blt(x, y, 0, 40, 72, 12, 12, 0)
+            else:
+                pyxel.blt(x, y, 0, 56, 72, 12, 12, 0)
 
         # 中心の表示
         shooting_sub.DebugDrawPosHitRect(self)
