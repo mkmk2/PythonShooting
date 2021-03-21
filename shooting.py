@@ -27,7 +27,8 @@ class App:
 
     # 初期化---------------------------------------
     def __init__(self):
-        pyxel.init(imp.WINDOW_W, imp.WINDOW_H, caption="Pyxel Shooting", scale=3, fps=60)
+#        pyxel.init(imp.WINDOW_W, imp.WINDOW_H, caption="Pyxel Shooting", scale=3, fps=60)
+        pyxel.init(imp.WINDOW_W, imp.WINDOW_H, caption="Pyxel Shooting", scale=3, fps=60, palette=[0x000000, 0xc8cbd2, 0x000000, 0xa7a5a2, 0xe057cd, 0x335793, 0x099c9e, 0xffffff, 0xef337b, 0x1f2856, 0x000000, 0xffff00, 0x000000, 0x000000, 0x000000, 0x000000])
         pyxel.load("assets/my_resource.pyxres")
 
         pyxel.image(0).load(0, 0, "assets/img0.png")
