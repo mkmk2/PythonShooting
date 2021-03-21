@@ -6,7 +6,7 @@ import random
 import shooting_sub
 import effect
 
-PL_SPEED = 1.2
+PL_SPEED = 1.5
 
 PLST_DEMO = 0
 PLST_PLAY = 1
