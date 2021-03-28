@@ -559,7 +559,7 @@ class SceneGameClear:
     def __init__(self):
         imp.Game_Status = imp.GAME_STATUS_STAGECLEAR       # ステージクリア
 
-        self.PosX = 128 - (8 * 4) - 4
+        self.PosX = 128 - (8 * 2.5)
         self.PosY = 100
         self.WaitTime = 60 * 5
 
@@ -577,7 +577,7 @@ class SceneGameClear:
         
     def draw(self):
         # STAGE CLEAR
-        pyxel.blt(self.PosX - (8 * 4),      self.PosY, 0, 8*8,  8*18, 8*8, 16, 0)
+        pyxel.blt(self.PosX - (8 * 2.5),      self.PosY, 0, 8*9,  8*18, 8*5, 16, 0)
 
 # ==================================================
 # Scene 次のステージへ送る
