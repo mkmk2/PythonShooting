@@ -376,6 +376,7 @@ class SceneGameMain:
                             else:
                                 pyxel.blt(((imp.WINDOW_W / 2) - ((imp.PL_ITEM_LEVEL_UP / 2) * 8)) + 8 * n, imp.WINDOW_H - 12, 0, 8 * 6, 8 * 2, 8, 8, 0)  # とった分
                     else:
+        # ステージの位置から敵をセットする
                     # 点滅
                         imp.PlLevelUpEff -= 1
                         if pyxel.frame_count & 0x02:
@@ -396,7 +397,6 @@ class SceneGameMain:
 
     #  ------------------------------------------
     def SetStageEnemy(self):
-        # ステージの位置から敵をセットする
         l = len(imp.StageSetTbl)                # ステージTbl数
         n = 0                                   # 頭からの順番
         pos = 0
